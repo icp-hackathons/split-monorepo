@@ -25,7 +25,7 @@
   },
   "workbench.colorCustomizations": {
     "activityBar.activeFocusBorder": "#001494",
-    "activityBar.activeBackground": "#666666",
+    "activityBar.activeBackground": "#FFFFFF",
     "activityBar.background": "#333333",
     "activityBar.foreground": "#001494",
     "activityBar.inactiveForeground": "#FFFFFF",
@@ -70,7 +70,5 @@
   "[typescriptreact]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
-  "cSpell.words": [
-    "tailwindcss"
-  ]
+  "cSpell.words": ["commitlint", "tailwindcss"]
 }

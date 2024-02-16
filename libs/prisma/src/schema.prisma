@@ -1,9 +1,20 @@
-generator client {
-    provider = "prisma-client-js"
-    output   = "<path-to-node_modules>/node_modules/@prisma/client/<some-custom-name>"
-}
-
 datasource db {
     provider = "postgresql"
-    url      = env("DATABASE_URL")
+    url      = env("PRISMA_DATABASE_URL")
+}
+
+generator client {
+    provider = "prisma-client-js"
+    output   = "./generated/client"
+}
+
+model User {
+    /// 아이디
+    id        String   @id @default(cuid())
+    /// 이름
+    name      String
+    /// 생성 일시
+    createdAt DateTime @default(now()) @db.Timestamp(3)
+    /// 수정 일시
+    updatedAt DateTime @updatedAt @db.Timestamp(3)
 }
