@@ -1,8 +1,8 @@
 {
-  "name": "prisma",
+  "name": "hooks",
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
-  "sourceRoot": "libs/prisma/src",
+  "sourceRoot": "libs/hooks/src",
   "projectType": "library",
-  "targets": {},
-  "tags": []
+  "tags": [],
+  "targets": {}
 }

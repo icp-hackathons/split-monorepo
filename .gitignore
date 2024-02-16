@@ -46,3 +46,6 @@ libs/prisma/src/generated
 Thumbs.db
 
 .nx/cache
+
+# Next.js
+.next

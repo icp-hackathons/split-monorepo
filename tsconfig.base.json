@@ -1,6 +1,7 @@
 {
   "compileOnSave": false,
   "compilerOptions": {
+    "jsx": "react-jsx",
     "rootDir": ".",
     "sourceMap": true,
     "declaration": false,
@@ -16,9 +17,10 @@
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
-      "@split-monorepo/model": ["libs/model/src/index.ts"],
-      "@split-monorepo/prisma": ["libs/prisma/src/index.ts"]
+      "@split/hooks": ["libs/hooks/src/index.ts"],
+      "@split/ui": ["libs/ui/src/index.ts"],
+      "@split/model": ["libs/model/src/index.ts"]
     }
   },
-  "exclude": ["node_modules", "tmp"]
+  "exclude": ["node_modules", "tmp", "dist", ".next"]
 }
