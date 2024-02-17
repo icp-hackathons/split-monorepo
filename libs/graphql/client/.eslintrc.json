@@ -1,11 +1,12 @@
 {
-  "extends": ["../../.eslintrc.json"],
-  "ignorePatterns": ["!**/*"],
+  "extends": ["../../../.eslintrc.json"],
+  "ignorePatterns": ["!**/*", "__generated__/*"],
   "overrides": [
     {
       "files": ["*.ts", "*.tsx", "*.js", "*.jsx"],
       "rules": {
-        "@typescript-eslint/no-non-null-assertion": 0
+        "no-param-reassign": 0,
+        "consistent-return": 0
       }
     },
     {

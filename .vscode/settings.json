@@ -1,17 +1,17 @@
 {
   "files.exclude": {
-    ".husky": true,
-    ".editorconfig": true,
-    ".lintstagedrc": true,
-    ".gitmessage.txt": true,
-    "jest.config.ts": true,
-    "jest.preset.js": true,
-    ".prettierignore": true,
-    ".prettierrc": true,
-    ".nxignore": true,
-    ".gitignore": true,
-    ".gitmodules": true,
-    "commitlint.config.js": true,
+    ".husky": false,
+    ".editorconfig": false,
+    ".lintstagedrc": false,
+    ".gitmessage.txt": false,
+    "jest.config.ts": false,
+    "jest.preset.js": false,
+    ".prettierignore": false,
+    ".prettierrc": false,
+    ".nxignore": false,
+    ".gitignore": false,
+    ".gitmodules": false,
+    "commitlint.config.js": false,
     "**/.next/": true,
     "**/node_modules/": true
   },
@@ -70,5 +70,5 @@
   "[typescriptreact]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
-  "cSpell.words": ["commitlint", "tailwindcss"]
+  "cSpell.words": ["codegen", "commitlint", "gitmessage", "nestjs", "tailwindcss"]
 }
