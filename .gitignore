@@ -8,6 +8,9 @@ tmp
 # dependencies
 node_modules
 
+# nx
+.nx
+
 # IDEs and editors
 /.idea
 .project
@@ -34,8 +37,16 @@ yarn-error.log
 testem.log
 /typings
 
+# generated
+libs/graphql/schema.graphql
+libs/model/src/lib/@generated
+libs/prisma/generated
+
 # System Files
 .DS_Store
 Thumbs.db
 
 .nx/cache
+
+# Next.js
+.next

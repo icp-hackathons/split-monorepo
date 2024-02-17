@@ -1,0 +1,68 @@
+{
+  "name": "client-demo",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "apps/client-demo/src",
+  "projectType": "application",
+  "targets": {
+    "build": {
+      "executor": "@nx/next:build",
+      "outputs": ["{options.outputPath}"],
+      "defaultConfiguration": "production",
+      "options": {
+        "root": "apps/client-demo",
+        "outputPath": "dist/apps/client-demo",
+        "assets": [
+          {
+            "glob": "**/*.!(ts)",
+            "input": "libs/ui/public",
+            "output": "shared"
+          }
+        ]
+      },
+      "configurations": {
+        "development": {
+          "outputPath": "apps/client-demo"
+        },
+        "qa": {},
+        "production": {}
+      }
+    },
+    "serve": {
+      "executor": "@nx/next:server",
+      "defaultConfiguration": "development",
+      "options": {
+        "buildTarget": "client-demo:build",
+        "dev": true
+      },
+      "configurations": {
+        "development": {
+          "buildTarget": "client-demo:build:development",
+          "port": 4201,
+          "dev": true
+        },
+        "production": {
+          "buildTarget": "client-demo:build:production",
+          "dev": false
+        }
+      }
+    },
+    "export": {
+      "executor": "@nx/next:export",
+      "options": {
+        "buildTarget": "client-demo:build:production"
+      }
+    },
+    "test": {
+      "executor": "@nx/jest:jest",
+      "outputs": ["{workspaceRoot}/coverage/apps/client-demo"],
+      "options": {
+        "jestConfig": "apps/client/demo/jest.config.ts"
+      }
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint",
+      "outputs": ["{options.outputFile}"]
+    }
+  },
+  "tags": []
+}
