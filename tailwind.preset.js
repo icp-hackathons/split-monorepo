@@ -70,7 +70,7 @@ module.exports = {
       lg: "1440px",
     },
     fontFamily: {
-      sans: ["Pretendard", "Open Sans"],
+      sans: ["Open Sans"],
     },
     fontSize: {
       "10/regular": ["10px", { fontWeight: 400, lineHeight: "130%" }],

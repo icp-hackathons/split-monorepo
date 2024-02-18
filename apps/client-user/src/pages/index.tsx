@@ -1,5 +1,6 @@
 import clsx from "clsx";
 import { Button, TextField } from "@split/ui";
+import MetamaskIcon from "~/client-user/public/shared/icons/MetamaskIcon.png";
 
 export const Index = () => {
   /*
@@ -9,7 +10,7 @@ export const Index = () => {
    */
   return (
     <div className={clsx("flex flex-col items-center gap-2")}>
-      <Button description="Text Button" />
+      <Button icon={MetamaskIcon} description="Text Button" />
       <TextField label="Text Field" error="This is error message" />
       <TextField
         label="Text Field"

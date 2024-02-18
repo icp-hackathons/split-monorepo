@@ -1,11 +1,13 @@
 import clsx from "clsx";
+import type { StaticImageData } from "next/image";
+import Image from "next/image";
 import { forwardRef } from "react";
 import type { UIProps } from "../../../props";
 
 export interface ButtonProps extends UIProps.Button {
   size?: "small" | "large";
   color?: "white" | "blue";
-  iconButton?: boolean;
+  icon?: StaticImageData;
   description?: string;
 }
 
@@ -28,7 +30,7 @@ export const ButtonColors = {
 };
 
 export const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button(
-  { type = "button", color = "white", size = "small", iconButton = false, description, className, children, ...props },
+  { type = "button", color = "blue", size = "small", icon, description, className, children, ...props },
   ref,
 ) {
   return (
@@ -36,14 +38,15 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button
       ref={ref}
       type={type === "button" ? "button" : "submit"}
       className={clsx(
-        " inline-flex flex-row items-center justify-center gap-[10px] rounded-[5px] border py-4 text-center font-sans",
+        "inline-flex flex-row items-center justify-center gap-[10px] rounded-[5px] border py-4 text-center text-16/semi-bold",
         ButtonColors[color],
         ButtonSizes[size],
-        iconButton ? "px-5" : "px-[30px]",
+        icon ? "px-5" : "px-[30px]",
         className,
       )}
       {...props}
     >
+      {!!icon && <Image src={icon} alt="icon" width={18} height={18} />}
       {!!description && <span>{description}</span>}
     </button>
   );

@@ -91,7 +91,7 @@
         "@nx/enforce-module-boundaries": [
           1,
           {
-            "allow": ["~/ui/**"]
+            "allow": ["~/client-user/**", "~/client-demo/**", "~/server/**", "~/ui/**"]
           }
         ]
       }

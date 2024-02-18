@@ -22,6 +22,9 @@
       "@split/model": ["libs/model/src/index.ts"],
       "@split/ui": ["libs/ui/src/index.ts"],
       "@split/utils": ["libs/utils/src/index.ts"],
+      "~/client-demo/*": ["apps/client-demo/*"],
+      "~/client-user/*": ["apps/client-user/*"],
+      "~/server/*": ["apps/server/*"],
       "~/ui/*": ["libs/ui/*"],
       "~/prisma/*": ["libs/prisma/*"]
     }
