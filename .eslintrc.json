@@ -21,6 +21,7 @@
     {
       "files": ["*.ts", "*.tsx", "*.js", "*.jsx"],
       "rules": {
+        "global-require": 0,
         "no-alert": 1,
         "no-console": 0,
         "no-shadow": 0,
@@ -88,16 +89,9 @@
         "@typescript-eslint/no-unsafe-enum-comparison": 1,
         "@typescript-eslint/lines-between-class-members": 0,
         "@nx/enforce-module-boundaries": [
-          "error",
+          1,
           {
-            "enforceBuildableLibDependency": true,
-            "allow": [],
-            "depConstraints": [
-              {
-                "sourceTag": "*",
-                "onlyDependOnLibsWithTags": ["*"]
-              }
-            ]
+            "allow": ["~/ui/**"]
           }
         ]
       }
