@@ -10,11 +10,166 @@ generator client {
 
 model User {
     /// 아이디
-    id        String   @id @default(cuid())
+    id           String         @id @default(cuid())
     /// 지갑 주소
-    address   String   @unique @db.VarChar(42)
+    address      String         @unique @db.VarChar(42)
+    /// 역할
+    role         ROLE           @default(USER)
+    /// 상태
+    status       STATUS         @default(ACTIVE)
     /// 생성 일시
-    createdAt DateTime @default(now()) @db.Timestamp(3)
+    createdAt    DateTime       @default(now()) @db.Timestamp(3)
     /// 수정 일시
-    updatedAt DateTime @updatedAt @db.Timestamp(3)
+    updatedAt    DateTime       @updatedAt @db.Timestamp(3)
+    /// 추천인 활동 정보
+    userReferral UserReferral[]
+    /// 제품 정보
+    products     Product[]
+}
+
+model UserReferral {
+    /// 아이디
+    id         String   @id @default(cuid())
+    /// 사용자
+    User       User?    @relation(fields: [userId], references: [id])
+    /// 사용자 아이디
+    userId     String
+    /// 레퍼럴
+    Referral   Referral @relation(fields: [referralId], references: [id])
+    /// 레퍼럴 아이디
+    referralId String
+    /// 보상 수령 여부
+    claimed    Boolean  @default(false)
+    /// 생성 일시
+    createdAt  DateTime @default(now()) @db.Timestamp(3)
+    /// 수정 일시
+    updatedAt  DateTime @updatedAt @db.Timestamp(3)
+}
+
+model Referral {
+    /// 아이디
+    id            String         @id @default(cuid())
+    /// 사용자
+    userReferrals UserReferral[]
+    /// 이벤트 
+    event         Event          @relation(fields: [eventId], references: [id])
+    /// 이벤트 아이디
+    eventId       String         @unique
+    /// 생성 일시
+    createdAt     DateTime       @default(now()) @db.Timestamp(3)
+    /// 수정 일시
+    updatedAt     DateTime       @updatedAt @db.Timestamp(3)
+}
+
+model Product {
+    /// 아이디
+    id              String         @id @default(cuid())
+    /// 사용자
+    User            User?          @relation(fields: [userId], references: [id])
+    /// 사용자 아이디
+    userId          String
+    /// 제품 이름
+    name            String
+    /// 웹 링크
+    webLink         String         @db.VarChar(1024)
+    /// 트위터 링크
+    twitterLink     String?        @db.VarChar(1024)
+    /// 소개
+    description     String
+    /// API 키
+    apiKey          String
+    /// SDK 설치 여부
+    isSdkIntegrated Boolean        @default(false)
+    /// 생성 일시
+    createdAt       DateTime       @default(now()) @db.Timestamp(3)
+    /// 수정 일시
+    updatedAt       DateTime       @updatedAt @db.Timestamp(3)
+    /// 보상 풀
+    incentivePool   IncentivePool?
+    /// 이벤트
+    events          Event[]
+}
+
+model IncentivePool {
+    /// 제품
+    product          Product?          @relation(fields: [productId], references: [id])
+    /// 제품 아이디
+    productId        String            @id
+    /// 보상 풀 주소
+    poolAddress      String            @unique @db.VarChar(42)
+    /// 보상 풀 네트워크
+    poolNetwork      SUPPORTED_NETWORK
+    /// 보상 풀 토큰 주소
+    incentiveAddress String            @db.VarChar(42)
+    /// 생성 일시
+    createdAt        DateTime          @default(now()) @db.Timestamp(3)
+    /// 수정 일시
+    updatedAt        DateTime          @updatedAt @db.Timestamp(3)
+}
+
+model Event {
+    /// 아이디
+    id                     String       @id @default(cuid())
+    /// 이름
+    name                   String
+    /// 제품
+    product                Product      @relation(fields: [productId], references: [id])
+    /// 제품 아이디
+    productId              String
+    /// 이벤트 타입
+    type                   EVENT_TYPE   @default(NON_TRANSACTION)
+    /// 이벤트당 추천인 수령 금액
+    providerAmountPerEvent String
+    /// 이벤트당 사용자 수령 금액
+    userAmountPerEvent     String?
+    /// 생성 일시
+    createdAt              DateTime     @default(now()) @db.Timestamp(3)
+    /// 수정 일시
+    updatedAt              DateTime     @updatedAt @db.Timestamp(3)
+    /// 트랜잭션
+    transaction            Transaction?
+    /// 레퍼럴
+    referrals              Referral[]
+}
+
+model Transaction {
+    /// 아이디
+    id            String   @id @default(cuid())
+    /// 대상 주소
+    targetAddress String   @db.VarChar(42)
+    /// 함수 코드
+    methodId      String   @db.VarChar(10)
+    /// 이벤트 
+    event         Event    @relation(fields: [eventId], references: [id])
+    /// 이벤트 아이디
+    eventId       String   @unique
+    /// 생성 일시
+    createdAt     DateTime @default(now()) @db.Timestamp(3)
+    /// 수정 일시
+    updatedAt     DateTime @updatedAt @db.Timestamp(3)
+
+    @@unique([targetAddress, methodId])
+}
+
+enum ROLE {
+    USER
+    REFERRAL_PROVIDER
+    AFFILIATE
+    ADMIN
+}
+
+enum STATUS {
+    ACTIVE
+    INACTIVE
+    DELETE
+}
+
+enum SUPPORTED_NETWORK {
+    NONE
+    SEPOLIA_TESTNET
+}
+
+enum EVENT_TYPE {
+    NON_TRANSACTION
+    TRANSACTION
 }
