@@ -13,8 +13,8 @@ import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/
  * Therefore it is highly recommended to use the babel or swc plugin for production.
  */
 const documents = {
-    "\n  mutation Register($input: UserInput!) {\n    register(input: $input) {\n      id\n      address\n      createdAt\n      updatedAt\n    }\n  }\n": types.RegisterDocument,
-    "\n  query GetUser($input: UserInput!) {\n    getUser(input: $input) {\n      id\n      address\n      createdAt\n      updatedAt\n    }\n  }\n": types.GetUserDocument,
+    "\n  mutation RequestLogin($input: UserInput!) {\n    requestLogin(input: $input) {\n      id\n      address\n      createdAt\n      updatedAt\n    }\n  }\n": types.RequestLoginDocument,
+    "\n  query FindUserByAddress($input: UserInput!) {\n    findUserByAddress(input: $input) {\n      id\n      address\n      createdAt\n      updatedAt\n    }\n  }\n": types.FindUserByAddressDocument,
 };
 
 /**
@@ -34,11 +34,11 @@ export function gql(source: string): unknown;
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
-export function gql(source: "\n  mutation Register($input: UserInput!) {\n    register(input: $input) {\n      id\n      address\n      createdAt\n      updatedAt\n    }\n  }\n"): (typeof documents)["\n  mutation Register($input: UserInput!) {\n    register(input: $input) {\n      id\n      address\n      createdAt\n      updatedAt\n    }\n  }\n"];
+export function gql(source: "\n  mutation RequestLogin($input: UserInput!) {\n    requestLogin(input: $input) {\n      id\n      address\n      createdAt\n      updatedAt\n    }\n  }\n"): (typeof documents)["\n  mutation RequestLogin($input: UserInput!) {\n    requestLogin(input: $input) {\n      id\n      address\n      createdAt\n      updatedAt\n    }\n  }\n"];
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
-export function gql(source: "\n  query GetUser($input: UserInput!) {\n    getUser(input: $input) {\n      id\n      address\n      createdAt\n      updatedAt\n    }\n  }\n"): (typeof documents)["\n  query GetUser($input: UserInput!) {\n    getUser(input: $input) {\n      id\n      address\n      createdAt\n      updatedAt\n    }\n  }\n"];
+export function gql(source: "\n  query FindUserByAddress($input: UserInput!) {\n    findUserByAddress(input: $input) {\n      id\n      address\n      createdAt\n      updatedAt\n    }\n  }\n"): (typeof documents)["\n  query FindUserByAddress($input: UserInput!) {\n    findUserByAddress(input: $input) {\n      id\n      address\n      createdAt\n      updatedAt\n    }\n  }\n"];
 
 export function gql(source: string) {
   return (documents as any)[source] ?? {};

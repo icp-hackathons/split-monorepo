@@ -13,4 +13,10 @@ export default (): ConfigType => ({
     schemaDestination: process.env.SCHEMA_DESTINATION,
     sortSchema: process.env.SORT_SCHEMA === "true",
   },
+  jwt: {
+    secret: process.env.JWT_SECRET,
+    expiredTime: process.env.JWT_EXPIRED_TIME,
+    refreshSecret: process.env.JWT_REFRESH_SECRET,
+    refreshExpiredTime: process.env.JWT_REFRESH_EXPIRED_TIME,
+  },
 });
