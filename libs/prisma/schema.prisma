@@ -17,14 +17,29 @@ model User {
     role         ROLE           @default(USER)
     /// 상태
     status       STATUS         @default(ACTIVE)
+    /// 일회용 논스값
+    nonce        String?
     /// 생성 일시
     createdAt    DateTime       @default(now()) @db.Timestamp(3)
     /// 수정 일시
     updatedAt    DateTime       @updatedAt @db.Timestamp(3)
+    /// 인증 관련 정보
+    authToken    AuthToken?
     /// 추천인 활동 정보
     userReferral UserReferral[]
     /// 제품 정보
     products     Product[]
+}
+
+model AuthToken {
+    /// 사용자
+    user                  User    @relation(fields: [userId], references: [id])
+    /// 사용자 ID
+    userId                String  @id @unique
+    /// access token
+    accessToken           String
+    /// 암호화된 refresh token
+    encryptedRefreshToken String?
 }
 
 model UserReferral {
