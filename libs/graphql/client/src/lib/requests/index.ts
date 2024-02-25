@@ -2,4 +2,4 @@
 export * from "./mutations/register";
 
 // queries
-export * from "./queries/getUser";
+export * from "./queries/findUserByAddress";
