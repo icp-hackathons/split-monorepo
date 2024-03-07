@@ -38,7 +38,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button
       ref={ref}
       type={type === "button" ? "button" : "submit"}
       className={clsx(
-        "inline-flex flex-row items-center justify-center gap-[10px] rounded-[5px] border py-4 text-center text-16/semi-bold",
+        "inline-flex flex-row items-center justify-center gap-2.5 rounded-[5px] border py-4 text-center text-16/semi-bold",
         ButtonColors[color],
         ButtonSizes[size],
         icon ? "px-5" : "px-[30px]",
