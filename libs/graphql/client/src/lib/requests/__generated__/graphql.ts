@@ -16,24 +16,60 @@ export type Scalars = {
   Float: { input: number; output: number; }
   /** A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format. */
   DateTime: { input: any; output: any; }
+  /** A field whose value is a JSON Web Token (JWT): https://jwt.io/introduction. */
+  JWT: { input: any; output: any; }
 };
 
 export type Mutation = {
-  register: UserInfo;
+  refreshTokens: Token;
+  requestLogin: UserInfo;
+  verifyLogin: Token;
 };
 
 
-export type MutationRegisterArgs = {
+export type MutationRefreshTokensArgs = {
+  input: TokenInput;
+};
+
+
+export type MutationRequestLoginArgs = {
   input: UserInput;
+};
+
+
+export type MutationVerifyLoginArgs = {
+  input: VerifyUserInput;
 };
 
 export type Query = {
-  getUser: UserInfo;
+  findUserByAddress: UserInfo;
 };
 
 
-export type QueryGetUserArgs = {
+export type QueryFindUserByAddressArgs = {
   input: UserInput;
+};
+
+export type Role =
+  | 'ADMIN'
+  | 'APP'
+  | 'CREATOR'
+  | 'MULTI_SELLER'
+  | 'SELLER'
+  | 'USER';
+
+export type Token = {
+  /** Access token */
+  accessToken: Scalars['JWT']['output'];
+  /** Refresh token */
+  refreshToken: Scalars['JWT']['output'];
+};
+
+export type TokenInput = {
+  /** Access token */
+  accessToken: Scalars['String']['input'];
+  /** Refresh token */
+  refreshToken: Scalars['String']['input'];
 };
 
 /** 사용자 정보 */
@@ -44,6 +80,8 @@ export type UserInfo = {
   createdAt: Scalars['DateTime']['output'];
   /** 아이디 */
   id: Scalars['ID']['output'];
+  /** 역할 */
+  role: Role;
   /** 수정 일시 */
   updatedAt: Scalars['DateTime']['output'];
 };
@@ -53,20 +91,43 @@ export type UserInput = {
   address: Scalars['String']['input'];
 };
 
-export type RegisterMutationVariables = Exact<{
+export type VerifyUserInput = {
+  /** 메시지 */
+  message: Scalars['String']['input'];
+  /** 서명 */
+  signature: Scalars['String']['input'];
+};
+
+export type RefreshTokensMutationVariables = Exact<{
+  input: TokenInput;
+}>;
+
+
+export type RefreshTokensMutation = { refreshTokens: { accessToken: any, refreshToken: any } };
+
+export type RequestLoginMutationVariables = Exact<{
   input: UserInput;
 }>;
 
 
-export type RegisterMutation = { register: { id: string, address: string, createdAt: any, updatedAt: any } };
+export type RequestLoginMutation = { requestLogin: { id: string, address: string, createdAt: any, updatedAt: any } };
 
-export type GetUserQueryVariables = Exact<{
+export type VerifyLoginMutationVariables = Exact<{
+  input: VerifyUserInput;
+}>;
+
+
+export type VerifyLoginMutation = { verifyLogin: { accessToken: any, refreshToken: any } };
+
+export type FindUserByAddressQueryVariables = Exact<{
   input: UserInput;
 }>;
 
 
-export type GetUserQuery = { getUser: { id: string, address: string, createdAt: any, updatedAt: any } };
+export type FindUserByAddressQuery = { findUserByAddress: { id: string, address: string, createdAt: any, updatedAt: any } };
 
 
-export const RegisterDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"Register"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"UserInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"register"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"address"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"updatedAt"}}]}}]}}]} as unknown as DocumentNode<RegisterMutation, RegisterMutationVariables>;
-export const GetUserDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetUser"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"UserInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"getUser"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"address"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"updatedAt"}}]}}]}}]} as unknown as DocumentNode<GetUserQuery, GetUserQueryVariables>;
+export const RefreshTokensDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"RefreshTokens"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"TokenInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"refreshTokens"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"accessToken"}},{"kind":"Field","name":{"kind":"Name","value":"refreshToken"}}]}}]}}]} as unknown as DocumentNode<RefreshTokensMutation, RefreshTokensMutationVariables>;
+export const RequestLoginDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"RequestLogin"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"UserInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"requestLogin"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"address"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"updatedAt"}}]}}]}}]} as unknown as DocumentNode<RequestLoginMutation, RequestLoginMutationVariables>;
+export const VerifyLoginDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"VerifyLogin"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"VerifyUserInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"verifyLogin"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"accessToken"}},{"kind":"Field","name":{"kind":"Name","value":"refreshToken"}}]}}]}}]} as unknown as DocumentNode<VerifyLoginMutation, VerifyLoginMutationVariables>;
+export const FindUserByAddressDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"FindUserByAddress"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"UserInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"findUserByAddress"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"address"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"updatedAt"}}]}}]}}]} as unknown as DocumentNode<FindUserByAddressQuery, FindUserByAddressQueryVariables>;

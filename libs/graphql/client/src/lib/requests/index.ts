@@ -1,5 +1,5 @@
 // mutations
-export * from "./mutations/register";
+export * from "./mutations/requestLogin";
 
 // queries
-export * from "./queries/getUser";
+export * from "./queries/findUserByAddress";
