@@ -1,5 +1,7 @@
 import Image from "next/image";
-import { Button } from "@split/ui";
+import { Button, NetworkStatus, useWalletContext } from "@split/ui";
+import { formatAddress, formatChainId } from "@split/utils";
+import MetamaskIcon from "~/client-user/public/shared/icons/MetamaskIcon.png";
 import { ServiceTypes } from "~/client-user/src/types/user";
 import Logo from "~/ui/public/images/Logo.png";
 import { Tab } from "../Tab/Tab";
@@ -73,6 +75,19 @@ const tabs = [
 ];
 
 export const Header = () => {
+  const { wallet, connect, disconnect } = useWalletContext();
+
+  const walletAddress = wallet?.accounts[0].address;
+  const chainId = wallet?.chains[0].id;
+
+  const handleWalletConnect = async () => {
+    if (!wallet) {
+      await connect();
+    } else {
+      await disconnect({ label: wallet?.label });
+    }
+  };
+
   return (
     <div className="flex w-full items-start justify-between bg-theme-white px-10 py-[26px]">
       <div className="flex items-center justify-center gap-[130px]">
@@ -80,7 +95,14 @@ export const Header = () => {
         <Tab tabs={tabs} />
       </div>
       <div className="flex items-center gap-[30px]">
-        <Button description="Sign in" />
+        {!walletAddress || !chainId ? (
+          <Button description="Sign in" onClick={handleWalletConnect} />
+        ) : (
+          <div className="flex items-center gap-[30px]">
+            <NetworkStatus chainId={formatChainId(chainId)} />
+            <Button icon={MetamaskIcon} description={formatAddress(walletAddress)} onClick={handleWalletConnect} />
+          </div>
+        )}
       </div>
     </div>
   );
