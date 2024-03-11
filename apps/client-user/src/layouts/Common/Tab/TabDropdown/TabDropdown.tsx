@@ -1,5 +1,6 @@
 import clsx from "clsx";
-import { type KeyboardEvent, useState } from "react";
+import { useRouter } from "next/router";
+import { useState } from "react";
 import type { ServiceTypes } from "~/client-user/src/types/user";
 import { TabDropdownIcon } from "./TabDropdownIcon";
 
@@ -7,10 +8,11 @@ export interface TabDropdownTypes {
   type: ServiceTypes;
   title: string;
   description: string;
-  handleClick: () => void;
+  targetUrl: string;
 }
 
-export const TabDropdownElement = ({ type, title, description, handleClick }: TabDropdownTypes) => {
+export const TabDropdownElement = ({ type, title, description, targetUrl }: TabDropdownTypes) => {
+  const router = useRouter();
   const [isMouseEntered, setIsMouseEntered] = useState(false);
 
   return (
@@ -22,7 +24,9 @@ export const TabDropdownElement = ({ type, title, description, handleClick }: Ta
       )}
       onMouseEnter={() => setIsMouseEntered(true)}
       onMouseLeave={() => setIsMouseEntered(false)}
-      onClick={handleClick}
+      onClick={() => {
+        router.push(targetUrl);
+      }}
     >
       <TabDropdownIcon type={type} />
       <div className="flex flex-col items-start justify-center gap-1.5">

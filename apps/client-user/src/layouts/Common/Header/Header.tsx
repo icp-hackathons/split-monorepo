@@ -15,17 +15,13 @@ const tabs = [
             type: ServiceTypes.USER_DASHBOARD,
             title: "Dashboard",
             description: "Check your earnings so far through affiliate activities and transactions.",
-            handleClick: () => {
-              console.log("Dashboard");
-            },
+            targetUrl: "/dashboard/user",
           },
           {
             type: ServiceTypes.ALL_PRODUCTS,
             title: "All Products",
             description: "Promote and earn rewards by endorsing the products affiliated with Split.",
-            handleClick: () => {
-              console.log("All Products");
-            },
+            targetUrl: "/products",
           },
         ]}
       />
@@ -40,26 +36,20 @@ const tabs = [
             type: ServiceTypes.ADMIN_DASHBOARD,
             title: "Dashboard",
             description: "Monitor the advertising performance of your registered products and manage the reward pool.",
-            handleClick: () => {
-              console.log("Dashboard");
-            },
+            targetUrl: "/dashboard/admin",
           },
           {
             type: ServiceTypes.REGISTER_PRODUCT,
             title: "Register Product",
             description: "Enlist your product on Split and start promoting it to a broader audience.",
-            handleClick: () => {
-              console.log("Register Product");
-            },
+            targetUrl: "/register",
           },
           {
             type: ServiceTypes.DEVELOPERS,
             title: "Developers",
             description:
               "Manage your API keys and learn how to integrate the Split SDK into your product for enhanced functionality.",
-            handleClick: () => {
-              console.log("Developers");
-            },
+            targetUrl: "/developers",
           },
         ]}
       />
@@ -74,9 +64,7 @@ const tabs = [
             type: ServiceTypes.DEMO_WEBSITE,
             title: "Demo Website",
             description: "Check out our demo website to see how Split works for affiliates and users.",
-            handleClick: () => {
-              console.log("Demo Website");
-            },
+            targetUrl: "/demo",
           },
         ]}
       />

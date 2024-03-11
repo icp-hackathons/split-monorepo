@@ -2,6 +2,8 @@ import clsx from "clsx";
 import type { StaticImageData } from "next/image";
 import Image from "next/image";
 import { forwardRef } from "react";
+import ArrowRightBlue from "~/ui/public/icons/ArrowRightBlue.svg";
+import ArrowRightWhite from "~/ui/public/icons/ArrowRightWhite.svg";
 import type { UIProps } from "../../../props";
 
 export interface ButtonProps extends UIProps.Button {
@@ -13,7 +15,7 @@ export interface ButtonProps extends UIProps.Button {
 
 export const ButtonSizes = {
   small: clsx("h-[40px]"),
-  large: clsx("h-[55px]"),
+  large: clsx("h-[55px] border-theme-white"),
 };
 
 export const ButtonColors = {
@@ -48,6 +50,9 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button
     >
       {!!icon && <Image src={icon} alt="icon" width={18} height={18} />}
       {!!description && <span>{description}</span>}
+      {size === "large" && (
+        <Image src={color === "blue" ? ArrowRightWhite : ArrowRightBlue} alt="ArrowRight" width={16} height={16} />
+      )}
     </button>
   );
 });

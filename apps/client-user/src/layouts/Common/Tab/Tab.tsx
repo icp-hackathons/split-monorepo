@@ -17,7 +17,6 @@ export const Tab = ({ tabs }: TabProps) => {
   useEffect(() => {
     if (lineRef.current && menuRef.current) {
       const lineRect = lineRef.current.getBoundingClientRect();
-      console.log(lineRect);
       const menuRect = menuRef.current.getBoundingClientRect();
       const newLeft = lineRect.left + lineRect.width / 2 - menuRect.width / 2;
       const newTop = lineRect.bottom;
