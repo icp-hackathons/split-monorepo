@@ -1,6 +1,7 @@
 export interface ConfigType {
   nest: NestConfig;
   graphql: GraphqlConfig;
+  jwt: JwtConfig;
 }
 
 export interface NestConfig {
@@ -15,4 +16,11 @@ export interface GraphqlConfig {
   playgroundEnabled: boolean | undefined;
   schemaDestination: string | undefined;
   sortSchema: boolean | undefined;
+}
+
+export interface JwtConfig {
+  secret: string;
+  expiredTime: string;
+  refreshSecret: string;
+  refreshExpiredTime: string;
 }

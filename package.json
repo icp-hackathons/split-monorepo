@@ -116,6 +116,7 @@
     "graphql-scalars": "^1.22.4",
     "next": "14.0.4",
     "passport": "^0.6.0",
+    "passport-headerapikey": "^1.2.2",
     "passport-jwt": "^4.0.1",
     "prisma": "^5.5.2",
     "react": "18.2.0",
@@ -125,6 +126,7 @@
     "react-use": "^17.4.0",
     "reflect-metadata": "^0.1.13",
     "rxjs": "^7.8.0",
+    "siwe": "^2.1.4",
     "tslib": "^2.3.0",
     "universal-cookie": "^6.1.1"
   }

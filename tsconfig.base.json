@@ -17,6 +17,7 @@
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
+      "@split/constants": ["libs/constants/src/index.ts"],
       "@split/graphql": ["libs/graphql/client/src/index.ts"],
       "@split/hooks": ["libs/hooks/src/index.ts"],
       "@split/model": ["libs/model/src/index.ts"],
