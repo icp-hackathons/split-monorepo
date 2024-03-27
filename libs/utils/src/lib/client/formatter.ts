@@ -4,11 +4,11 @@ export const formatAddress = (walletAddress: string) => {
   return walletAddress.slice(0, 6).concat("...").concat(walletAddress.slice(-4));
 };
 
-export const formatChainId = (rawChainId: string) => {
-  switch (rawChainId.toLowerCase()) {
-    case "0xaa36a7":
+export const formatChainId = (rawChainId: number) => {
+  switch (rawChainId) {
+    case 11155111:
       return SupportedChainIds.ETHEREUM_SEPOLIA;
-    case "0x66eee":
+    case 421614:
       return SupportedChainIds.ARBITRUM_SEPOLIA;
     default:
       return SupportedChainIds.UNSUPPORTED;

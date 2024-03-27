@@ -6,7 +6,7 @@ export default (): ConfigType => ({
     environment: process.env.NEST_ENVIRONMENT,
     clientDomain: process.env.NOTIFICATION_SITE_DOMAIN,
     databaseUrl: process.env.PRISMA_DATABASE_URL,
-    readOnlyDatabaseUrl: process.env.PRISMA_READ_ONLY_DATABASE_URL,
+    readOnlyDatabaseUrl: process.env.READ_ONLY_PRISMA_DATABASE_URL,
   },
   graphql: {
     playgroundEnabled: process.env.PLAYGROUND_ENABLED === "true",
@@ -15,8 +15,8 @@ export default (): ConfigType => ({
   },
   jwt: {
     secret: process.env.JWT_SECRET,
-    expiredTime: process.env.JWT_EXPIRED_TIME,
+    expiredTime: process.env.JWT_EXPIRES_IN,
     refreshSecret: process.env.JWT_REFRESH_SECRET,
-    refreshExpiredTime: process.env.JWT_REFRESH_EXPIRED_TIME,
+    refreshExpiredTime: process.env.JWT_REFRESH_EXPIRES_IN,
   },
 });

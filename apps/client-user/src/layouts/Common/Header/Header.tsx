@@ -1,5 +1,6 @@
 import Image from "next/image";
-import { Button, NetworkStatus, useWalletContext } from "@split/ui";
+import { useConnectWallet } from "@split/hooks";
+import { Button, NetworkStatus } from "@split/ui";
 import { formatAddress, formatChainId } from "@split/utils";
 import MetamaskIcon from "~/client-user/public/shared/icons/MetamaskIcon.png";
 import { ServiceTypes } from "~/client-user/src/types/user";
@@ -75,16 +76,14 @@ const tabs = [
 ];
 
 export const Header = () => {
-  const { wallet, connect, disconnect } = useWalletContext();
-
-  const walletAddress = wallet?.accounts[0].address;
-  const chainId = wallet?.chains[0].id;
+  const { address, chain, handleConnect, handleDisconnect } = useConnectWallet();
+  const chainId = chain?.id;
 
   const handleWalletConnect = async () => {
-    if (!wallet) {
-      await connect();
+    if (!address) {
+      handleConnect();
     } else {
-      await disconnect({ label: wallet?.label });
+      handleDisconnect();
     }
   };
 
@@ -95,12 +94,12 @@ export const Header = () => {
         <Tab tabs={tabs} />
       </div>
       <div className="flex items-center gap-[30px]">
-        {!walletAddress || !chainId ? (
+        {!address || !chainId ? (
           <Button description="Sign in" onClick={handleWalletConnect} />
         ) : (
           <div className="flex items-center gap-[30px]">
             <NetworkStatus chainId={formatChainId(chainId)} />
-            <Button icon={MetamaskIcon} description={formatAddress(walletAddress)} onClick={handleWalletConnect} />
+            <Button icon={MetamaskIcon} description={formatAddress(address)} onClick={handleWalletConnect} />
           </div>
         )}
       </div>

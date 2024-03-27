@@ -23,6 +23,7 @@ export class UserService {
       create: {
         address: userInput.address,
         role: ROLE.USER,
+        status: "ACTIVE",
         nonce,
       },
       update: userInput,
