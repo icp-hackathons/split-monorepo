@@ -6,6 +6,11 @@ export * from "./lib/user/token.model";
 export * from "./lib/user/jwt.payload";
 export * from "./lib/user/verify-user.input";
 
+// Product
+export * from "./lib/product/product.create.input";
+export * from "./lib/product/product.update.input";
+export * from "./lib/product/product.model";
+
 // Error
 export * from "./lib/error/errors";
 export * from "./lib/error/gql-error-code";

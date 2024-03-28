@@ -21,9 +21,16 @@ export type Scalars = {
 };
 
 export type Mutation = {
+  createProduct: ProductInfo;
   refreshTokens: Token;
   requestLogin: UserInfo;
+  setIncentivePool: ProductInfo;
   verifyLogin: Token;
+};
+
+
+export type MutationCreateProductArgs = {
+  input: ProductCreateInput;
 };
 
 
@@ -37,8 +44,53 @@ export type MutationRequestLoginArgs = {
 };
 
 
+export type MutationSetIncentivePoolArgs = {
+  input: ProductUpdateInput;
+};
+
+
 export type MutationVerifyLoginArgs = {
   input: VerifyUserInput;
+};
+
+export type ProductCreateInput = {
+  /** 소개 */
+  description: Scalars['String']['input'];
+  /** 제품 이름 */
+  name: Scalars['String']['input'];
+  /** 트위터 링크 */
+  twitterLink?: InputMaybe<Scalars['String']['input']>;
+  /** 웹 링크 */
+  webLink: Scalars['String']['input'];
+};
+
+/** 제품 정보 */
+export type ProductInfo = {
+  /** API 키 */
+  apiKey: Scalars['String']['output'];
+  /** 생성 일시 */
+  createdAt: Scalars['DateTime']['output'];
+  /** 소개 */
+  description: Scalars['String']['output'];
+  /** 아이디 */
+  id: Scalars['ID']['output'];
+  /** SDK 설치 여부 */
+  isSdkIntegrated: Scalars['Boolean']['output'];
+  /** 제품 이름 */
+  name: Scalars['String']['output'];
+  /** 트위터 링크 */
+  twitterLink?: Maybe<Scalars['String']['output']>;
+  /** 수정 일시 */
+  updatedAt: Scalars['DateTime']['output'];
+  /** 사용자 아이디 */
+  userId: Scalars['String']['output'];
+  /** 웹 링크 */
+  webLink: Scalars['String']['output'];
+};
+
+export type ProductUpdateInput = {
+  /** 제품 아이디 */
+  id: Scalars['ID']['input'];
 };
 
 export type Query = {

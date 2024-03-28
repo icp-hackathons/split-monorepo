@@ -1,9 +1,3 @@
-/*
-  Warnings:
-
-  - Added the required column `nonce` to the `User` table without a default value. This is not possible if the table is not empty.
-
-*/
 -- CreateEnum
 CREATE TYPE "ROLE" AS ENUM ('USER', 'REFERRAL_PROVIDER', 'AFFILIATE', 'ADMIN');
 
@@ -16,10 +10,18 @@ CREATE TYPE "SUPPORTED_NETWORK" AS ENUM ('NONE', 'SEPOLIA_TESTNET');
 -- CreateEnum
 CREATE TYPE "EVENT_TYPE" AS ENUM ('NON_TRANSACTION', 'TRANSACTION');
 
--- AlterTable
-ALTER TABLE "User" ADD COLUMN     "nonce" TEXT NOT NULL,
-ADD COLUMN     "role" "ROLE" NOT NULL DEFAULT 'USER',
-ADD COLUMN     "status" "STATUS" NOT NULL DEFAULT 'ACTIVE';
+-- CreateTable
+CREATE TABLE "User" (
+    "id" TEXT NOT NULL,
+    "address" VARCHAR(42) NOT NULL,
+    "role" "ROLE" NOT NULL DEFAULT 'USER',
+    "status" "STATUS" NOT NULL DEFAULT 'ACTIVE',
+    "nonce" TEXT NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "User_pkey" PRIMARY KEY ("id")
+);
 
 -- CreateTable
 CREATE TABLE "AuthToken" (
@@ -33,7 +35,7 @@ CREATE TABLE "AuthToken" (
 -- CreateTable
 CREATE TABLE "UserReferral" (
     "id" TEXT NOT NULL,
-    "userId" TEXT NOT NULL,
+    "userAddress" TEXT NOT NULL,
     "referralId" TEXT NOT NULL,
     "claimed" BOOLEAN NOT NULL DEFAULT false,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -55,12 +57,12 @@ CREATE TABLE "Referral" (
 -- CreateTable
 CREATE TABLE "Product" (
     "id" TEXT NOT NULL,
-    "userId" TEXT NOT NULL,
+    "userAddress" TEXT NOT NULL,
     "name" TEXT NOT NULL,
     "webLink" VARCHAR(1024) NOT NULL,
     "twitterLink" VARCHAR(1024),
     "description" TEXT NOT NULL,
-    "apiKey" TEXT NOT NULL,
+    "apiKey" TEXT,
     "isSdkIntegrated" BOOLEAN NOT NULL DEFAULT false,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
@@ -107,6 +109,9 @@ CREATE TABLE "Transaction" (
 );
 
 -- CreateIndex
+CREATE UNIQUE INDEX "User_address_key" ON "User"("address");
+
+-- CreateIndex
 CREATE UNIQUE INDEX "AuthToken_userId_key" ON "AuthToken"("userId");
 
 -- CreateIndex
@@ -125,7 +130,7 @@ CREATE UNIQUE INDEX "Transaction_targetAddress_methodId_key" ON "Transaction"("t
 ALTER TABLE "AuthToken" ADD CONSTRAINT "AuthToken_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "UserReferral" ADD CONSTRAINT "UserReferral_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "UserReferral" ADD CONSTRAINT "UserReferral_userAddress_fkey" FOREIGN KEY ("userAddress") REFERENCES "User"("address") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "UserReferral" ADD CONSTRAINT "UserReferral_referralId_fkey" FOREIGN KEY ("referralId") REFERENCES "Referral"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
@@ -134,7 +139,7 @@ ALTER TABLE "UserReferral" ADD CONSTRAINT "UserReferral_referralId_fkey" FOREIGN
 ALTER TABLE "Referral" ADD CONSTRAINT "Referral_eventId_fkey" FOREIGN KEY ("eventId") REFERENCES "Event"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Product" ADD CONSTRAINT "Product_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "Product" ADD CONSTRAINT "Product_userAddress_fkey" FOREIGN KEY ("userAddress") REFERENCES "User"("address") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "IncentivePool" ADD CONSTRAINT "IncentivePool_productId_fkey" FOREIGN KEY ("productId") REFERENCES "Product"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
