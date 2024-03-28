@@ -71,9 +71,9 @@ export type Token = {
 
 export type TokenInput = {
   /** Access token */
-  accessToken: Scalars['String']['input'];
+  accessToken?: InputMaybe<Scalars['String']['input']>;
   /** Refresh token */
-  refreshToken: Scalars['String']['input'];
+  refreshToken?: InputMaybe<Scalars['String']['input']>;
 };
 
 /** 사용자 정보 */

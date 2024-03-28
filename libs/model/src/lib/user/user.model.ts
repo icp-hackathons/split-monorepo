@@ -7,7 +7,7 @@ export class UserInfo {
   @Field(() => ID, { nullable: false, description: "아이디" })
   id!: string;
 
-  @Field(() => String, { description: "지갑 주소" })
+  @Field(() => String, { nullable: false, description: "지갑 주소" })
   address!: string;
 
   @Field(() => ROLE, { nullable: false, description: "역할" })

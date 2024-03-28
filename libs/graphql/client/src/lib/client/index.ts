@@ -1,12 +1,20 @@
 import type { NormalizedCacheObject } from "@apollo/client";
-import { ApolloClient, InMemoryCache, createHttpLink } from "@apollo/client";
+import { ApolloClient, InMemoryCache, createHttpLink, from, fromPromise } from "@apollo/client";
+import { onError } from "@apollo/client/link/error";
 import { useState } from "react";
+import type { Token } from "@split/model";
 import type { CookieContext } from "@split/utils";
+import { type AuthCookieContext, authCookieKey, getCurrentToken, getNewToken, removeToken, setToken } from "./token";
+
+const REFRESH_TOKEN_OPERATION = "refreshTokens";
 
 export const getApolloClient = (uri?: string, cookieContext?: CookieContext) => {
+  let client: ApolloClient<NormalizedCacheObject>;
+
   const { req } = cookieContext || {};
   const ssrMode = !!req || typeof window === "undefined";
   const serverUrl = uri ?? process.env.NEXT_PUBLIC_SERVER_URL;
+  const context: AuthCookieContext = { authCookieKey, ...cookieContext };
 
   // Apollo Client Links
   const serverLink = createHttpLink({
@@ -17,9 +25,63 @@ export const getApolloClient = (uri?: string, cookieContext?: CookieContext) => 
     fetch,
   });
 
-  const client = new ApolloClient({
+  const errorLink = onError(({ graphQLErrors, operation, forward }) => {
+    const graphQLError = graphQLErrors?.[0];
+    if (!graphQLError) return;
+
+    const { accessToken, refreshToken } = getCurrentToken(context);
+    const errorCode = graphQLError.extensions.code as string;
+
+    const handleRemoveToken = () => {
+      removeToken(context);
+      if (typeof window !== "undefined") {
+        window.location.reload();
+      }
+    };
+
+    if ((!accessToken && !refreshToken) || operation.operationName === REFRESH_TOKEN_OPERATION) return;
+    if (!(accessToken && refreshToken) || errorCode === "UNAUTHENTICATED") {
+      handleRemoveToken();
+      const oldHeaders = operation.getContext()?.headers || {};
+      operation.setContext({
+        headers: {
+          ...oldHeaders,
+          authorization: "",
+        },
+      });
+      return forward(operation);
+    }
+
+    /*
+      Apollo refresh Token 새로고침 로직
+      https://community.apollographql.com/t/refreshing-access-and-refresh-tokens-via-apollo-in-react/1440/5
+    */
+    if (["TOKEN_EXPIRED_ERROR", "UNAUTHORIZED"].includes(errorCode)) {
+      return fromPromise(
+        getNewToken(client, refreshToken).catch(() => {
+          handleRemoveToken();
+          return undefined;
+        }),
+      )
+        .filter((value) => Boolean(value))
+        .flatMap((token) => {
+          const newToken = token as Token;
+          setToken(newToken, context);
+          const oldHeaders = operation.getContext()?.headers || {};
+          operation.setContext({
+            headers: {
+              ...oldHeaders,
+              authorization: `Bearer ${newToken.accessToken}`,
+            },
+          });
+          return forward(operation);
+        });
+    }
+  });
+
+  client = new ApolloClient({
     ssrMode,
-    link: serverLink,
+    link: from([errorLink, serverLink]),
     cache: new InMemoryCache(),
   });
 
