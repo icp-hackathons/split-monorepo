@@ -18,7 +18,7 @@ model User {
     /// 상태
     status       STATUS         @default(ACTIVE)
     /// 일회용 논스값
-    nonce        String?
+    nonce        String
     /// 생성 일시
     createdAt    DateTime       @default(now()) @db.Timestamp(3)
     /// 수정 일시

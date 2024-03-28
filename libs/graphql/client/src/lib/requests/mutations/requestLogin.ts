@@ -7,6 +7,9 @@ export const requestLogin = gql(/* GraphQL */ `
     requestLogin(input: $input) {
       id
       address
+      role
+      status
+      nonce
       createdAt
       updatedAt
     }

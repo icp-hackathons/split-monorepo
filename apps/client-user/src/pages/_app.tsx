@@ -1,18 +1,20 @@
-import { AppProps } from "next/app";
-import Head from "next/head";
-import "./styles.css";
+import { ApolloProvider } from "@apollo/client";
+import type { AppProps } from "next/app";
+import { WagmiConfig } from "wagmi";
+import { useGraphqlClient } from "@split/graphql";
+import { wagmiConfig } from "@split/utils";
+import "../../public/shared/styles/globals.css";
 
-function CustomApp({ Component, pageProps }: AppProps) {
+const App = ({ Component, pageProps: { sessions, ...pageProps } }: AppProps) => {
+  const client = useGraphqlClient();
+
   return (
-    <>
-      <Head>
-        <title>Welcome to client-user!</title>
-      </Head>
-      <main className="app">
+    <ApolloProvider client={client}>
+      <WagmiConfig config={wagmiConfig}>
         <Component {...pageProps} />
-      </main>
-    </>
+      </WagmiConfig>
+    </ApolloProvider>
   );
-}
+};
 
-export default CustomApp;
+export default App;
