@@ -2,7 +2,6 @@
 /* tslint:disable */
 /* eslint-disable */
 export type { IERC20 } from "./IERC20";
-export type { IVRC25 } from "./IVRC25";
 export type { Initializable } from "./Initializable";
 export type { IncentivePool } from "./IncentivePool";
 export type { IncentivePoolFactory } from "./IncentivePoolFactory";
@@ -17,7 +16,6 @@ export type { ERC20Mintable } from "./ERC20Mintable";
 export type { TestToken } from "./TestToken";
 
 export { IERC20__factory } from "./factories/IERC20__factory";
-export { IVRC25__factory } from "./factories/IVRC25__factory";
 export { Initializable__factory } from "./factories/Initializable__factory";
 export { IncentivePool__factory } from "./factories/IncentivePool__factory";
 export { IncentivePoolFactory__factory } from "./factories/IncentivePoolFactory__factory";
