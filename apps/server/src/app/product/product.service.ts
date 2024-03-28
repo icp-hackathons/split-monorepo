@@ -45,13 +45,13 @@ export class ProductService {
       incentivePoolFactoryContract.deployerToIncentivePool(userAddress),
     ]);
 
-    const isDeployerExist = deployers.some((deployer) => deployer.toLowerCase() === product.userAddress);
+    const isDeployerExist = deployers.some((deployer) => deployer === product.userAddress);
     if (!isDeployerExist || !poolAddress) throw new GraphQLError(ErrorMessage.MSG_NOT_FOUND_INCENTIVE_POOL);
 
     const apiKey = this.generateApiKey();
     const updatedProduct = await this.prisma.product.update({
       where: { id: productInput.id },
-      data: { apiKey, isSdkIntegrated: true },
+      data: { apiKey },
     });
 
     return updatedProduct;

@@ -1,5 +1,6 @@
 import type { NormalizedCacheObject } from "@apollo/client";
 import { ApolloClient, InMemoryCache, createHttpLink, from, fromPromise } from "@apollo/client";
+import { setContext } from "@apollo/client/link/context";
 import { onError } from "@apollo/client/link/error";
 import { useState } from "react";
 import type { Token } from "@split/model";
@@ -31,6 +32,22 @@ export const getApolloClient = (uri?: string, cookieContext?: CookieContext) => 
       mode: "cors",
     },
     fetch,
+  });
+
+  const authLink = setContext((_, { headers }) => {
+    const { accessToken } = getCurrentToken(context);
+    if (!accessToken) {
+      return {
+        headers,
+      };
+    }
+
+    return {
+      headers: {
+        ...headers,
+        authorization: `Bearer ${accessToken}`,
+      },
+    };
   });
 
   const errorLink = onError(({ graphQLErrors, operation, forward }) => {
@@ -89,7 +106,7 @@ export const getApolloClient = (uri?: string, cookieContext?: CookieContext) => 
 
   client = new ApolloClient({
     ssrMode,
-    link: from([errorLink, serverLink]),
+    link: from([authLink, errorLink, serverLink]),
     cache: new InMemoryCache(),
   });
 

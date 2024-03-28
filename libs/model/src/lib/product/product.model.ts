@@ -5,8 +5,8 @@ export class ProductInfo {
   @Field(() => ID, { nullable: false, description: "아이디" })
   id!: string;
 
-  @Field(() => String, { nullable: false, description: "사용자 아이디" })
-  userId!: string;
+  @Field(() => String, { nullable: false, description: "사용자 지갑 주소" })
+  userAddress!: string;
 
   @Field(() => String, { nullable: false, description: "제품 이름" })
   name!: string;

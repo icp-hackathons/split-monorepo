@@ -6,7 +6,7 @@ export const createProduct = gql(/* GraphQL */ `
   mutation CreateProduct($input: ProductCreateInput!) {
     createProduct(input: $input) {
       id
-      userId
+      userAddress
       name
       webLink
       twitterLink

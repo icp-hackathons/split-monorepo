@@ -6,7 +6,7 @@ export const setIncentivePool = gql(/* GraphQL */ `
   mutation SetIncentivePool($input: ProductUpdateInput!) {
     setIncentivePool(input: $input) {
       id
-      userId
+      userAddress
       name
       webLink
       twitterLink
