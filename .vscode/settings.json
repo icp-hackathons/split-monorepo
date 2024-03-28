@@ -80,5 +80,12 @@
     "siwe",
     "tailwindcss",
     "wagmi"
-  ]
+  ],
+  "files.associations": {
+    "*html": "html",
+    "*.css": "tailwindcss"
+  },
+  "editor.quickSuggestions": {
+    "strings": true
+  },
 }

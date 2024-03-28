@@ -1,3 +1,5 @@
+import RegisterProducts from "../../components/Register/RegisterProducts/RegisterProducts";
+
 export const User = () => {
   return (
     <div>
