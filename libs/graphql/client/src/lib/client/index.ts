@@ -8,6 +8,14 @@ import { type AuthCookieContext, authCookieKey, getCurrentToken, getNewToken, re
 
 const REFRESH_TOKEN_OPERATION = "refreshTokens";
 
+export const AuthTokenManager = {
+  authCookieKey,
+  getCurrentToken,
+  getNewToken,
+  removeToken,
+  setToken,
+};
+
 export const getApolloClient = (uri?: string, cookieContext?: CookieContext) => {
   let client: ApolloClient<NormalizedCacheObject>;
 

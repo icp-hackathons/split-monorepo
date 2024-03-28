@@ -20,8 +20,8 @@ export class ProductInfo {
   @Field(() => String, { nullable: false, description: "소개" })
   description!: string;
 
-  @Field(() => String, { nullable: false, description: "API 키" })
-  apiKey!: string;
+  @Field(() => String, { nullable: true, description: "API 키" })
+  apiKey?: string;
 
   @Field(() => Boolean, { nullable: false, description: "SDK 설치 여부" })
   isSdkIntegrated!: boolean;

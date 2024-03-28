@@ -1,10 +1,12 @@
 import { SupportedChainIds } from "../ethereum/network";
 
-export const formatAddress = (walletAddress: string) => {
+export const formatAddress = (walletAddress: string | undefined) => {
+  if (!walletAddress) throw new Error();
   return walletAddress.slice(0, 6).concat("...").concat(walletAddress.slice(-4));
 };
 
-export const formatChainId = (rawChainId: number) => {
+export const formatChainId = (rawChainId: number | undefined) => {
+  if (!rawChainId) throw new Error();
   switch (rawChainId) {
     case 11155111:
       return SupportedChainIds.ETHEREUM_SEPOLIA;
