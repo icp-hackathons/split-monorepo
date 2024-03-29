@@ -3,6 +3,7 @@ import * as crypto from "crypto";
 import { GraphQLError } from "graphql";
 import { ErrorMessage } from "@split/constants";
 import type { ProductCreateInput, ProductUpdateInput } from "@split/model";
+import type { Prisma } from "~/prisma/generated/client";
 import { ContractFactory } from "../../common/contract/contract.factory";
 import { PrismaService } from "../../common/prisma/prisma.service";
 
@@ -48,12 +49,42 @@ export class ProductService {
     const isDeployerExist = deployers.some((deployer) => deployer === product.userAddress);
     if (!isDeployerExist || !poolAddress) throw new GraphQLError(ErrorMessage.MSG_NOT_FOUND_INCENTIVE_POOL);
 
-    const apiKey = this.generateApiKey();
-    const updatedProduct = await this.prisma.product.update({
-      where: { id: productInput.id },
-      data: { apiKey },
-    });
+    return this.prisma.$transaction(async (prismaTransaction: Prisma.TransactionClient) => {
+      const { id, events, ...productInputs } = productInput;
+      const apiKey = this.generateApiKey();
 
-    return updatedProduct;
+      const productInfo = await prismaTransaction.product.update({
+        where: { id },
+        data: { ...productInputs, apiKey },
+      });
+
+      // NOTE: 현재는 단일 이벤트만 등록 가능
+      await Promise.all(
+        events.map(async (event) => {
+          const { transaction, type, ...eventInputs } = event;
+          const eventInfo = await prismaTransaction.event.create({
+            data: {
+              ...eventInputs,
+              type: "NON_TRANSACTION",
+              productId: productInfo.id,
+            },
+          });
+          if (transaction) {
+            await prismaTransaction.transaction.create({
+              data: {
+                ...transaction,
+                eventId: eventInfo.id,
+              },
+            });
+          }
+          return eventInfo;
+        }),
+      );
+      return productInfo;
+    });
+  }
+
+  async findProductByApiKey(apiKey: string) {
+    return this.prisma.extended.product.findUnique({ where: { apiKey } });
   }
 }

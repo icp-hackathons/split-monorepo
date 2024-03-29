@@ -92,7 +92,7 @@ model Product {
     /// 소개
     description     String
     /// API 키
-    apiKey          String?
+    apiKey          String?        @unique
     /// SDK 설치 여부
     isSdkIntegrated Boolean        @default(false)
     /// 생성 일시

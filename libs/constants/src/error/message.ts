@@ -8,6 +8,7 @@ export const ErrorMessage = {
   // 인증 관련
   MSG_TOKEN_EXPIRED: "Auth token expired",
   MSG_UNAUTHORIZED: "Unauthorized",
+  MSG_INVALID_API_KEY: "Invalid API Key",
 
   // 제품 관련
   MSG_NOT_FOUND_PRODUCT: "Product not found",
