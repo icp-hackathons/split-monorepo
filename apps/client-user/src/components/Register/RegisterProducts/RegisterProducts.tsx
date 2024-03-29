@@ -22,7 +22,9 @@ const RegisterProducts: React.FC<RegisterProductsProps> = ({ step }) => {
             />
             <Image src={bar} alt="bar" height={30} />
           </div>
-          <p className={step === 1 ? "text-theme-black" : "text-theme-gray"}>Register product information</p>
+          <p className={step === 1 ? "text-16/semi-bold text-theme-black" : "text-theme-gray"}>
+            Register product information
+          </p>
         </div>
 
         <div className="mt-2 flex flex-row gap-4">
@@ -35,7 +37,7 @@ const RegisterProducts: React.FC<RegisterProductsProps> = ({ step }) => {
             />
             <Image src={bar} alt="bar" height={30} />
           </div>
-          <p className={step === 2 ? "text-theme-black" : "text-theme-gray"}>Deploy incentive pool</p>
+          <p className={step === 2 ? "text-16/semi-bold text-theme-black" : "text-theme-gray"}>Deploy incentive pool</p>
         </div>
 
         <div className="mt-2 flex flex-row gap-4">
@@ -48,7 +50,9 @@ const RegisterProducts: React.FC<RegisterProductsProps> = ({ step }) => {
             />
             <Image src={bar} alt="bar" height={30} />
           </div>
-          <p className={step === 3 ? "text-theme-black" : "text-theme-gray"}>Get API keys and integrate it</p>
+          <p className={step === 3 ? "text-16/semi-bold text-theme-black" : "text-theme-gray"}>
+            Get API keys and integrate it
+          </p>
         </div>
 
         <div className="mt-2 flex flex-row gap-4 align-middle">
@@ -58,7 +62,7 @@ const RegisterProducts: React.FC<RegisterProductsProps> = ({ step }) => {
             width={step > 4 ? 25 : 22}
             height={step > 4 ? 25 : 22}
           />
-          <p className={step === 4 ? "text-theme-black" : "text-theme-gray"}>Complete guide</p>
+          <p className={step === 4 ? "text-16/semi-bold text-theme-black" : "text-theme-gray"}>Complete guide</p>
         </div>
       </div>
     </div>
