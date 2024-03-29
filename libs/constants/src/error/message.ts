@@ -13,4 +13,7 @@ export const ErrorMessage = {
   // 제품 관련
   MSG_NOT_FOUND_PRODUCT: "Product not found",
   MSG_NOT_FOUND_INCENTIVE_POOL: "Incentive pool not found",
+
+  // 레퍼럴 관련
+  MSG_DUPLICATE_REFERRAL: "Duplicated referral",
 };

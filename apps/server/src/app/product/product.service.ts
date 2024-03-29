@@ -87,4 +87,9 @@ export class ProductService {
   async findProductByApiKey(apiKey: string) {
     return this.prisma.extended.product.findUnique({ where: { apiKey } });
   }
+
+  async resolveEvents(productId: string) {
+    if (!productId) return null;
+    return this.prisma.extended.event.findMany({ where: { productId } });
+  }
 }

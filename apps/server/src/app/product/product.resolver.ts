@@ -1,6 +1,6 @@
 import { UseGuards } from "@nestjs/common";
-import { Args, Mutation, Resolver } from "@nestjs/graphql";
-import { JwtPayload, ProductCreateInput, ProductInfo, ProductUpdateInput } from "@split/model";
+import { Args, Mutation, Parent, ResolveField, Resolver } from "@nestjs/graphql";
+import { EventInfo, JwtPayload, ProductCreateInput, ProductInfo, ProductUpdateInput } from "@split/model";
 import { ProductService } from "./product.service";
 import { UserDecoded } from "../../common/decorators/user.decorator";
 import { JwtAuthGuard } from "../../common/guard/jwt.guard";
@@ -19,5 +19,10 @@ export class ProductResolver {
   @Mutation(() => ProductInfo)
   setIncentivePool(@UserDecoded() payload: JwtPayload, @Args("input") productInput: ProductUpdateInput) {
     return this.productService.setIncentivePool(payload.address, productInput);
+  }
+
+  @ResolveField("events", () => [EventInfo], { nullable: true })
+  async resolveEvents(@Parent() productInfo: ProductInfo) {
+    return this.productService.resolveEvents(productInfo.id);
   }
 }

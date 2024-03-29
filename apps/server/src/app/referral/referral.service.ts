@@ -1,4 +1,6 @@
 import { Injectable } from "@nestjs/common";
+import { GraphQLError } from "graphql";
+import { ErrorMessage } from "@split/constants";
 import { type ReferralInput, UserReferralType } from "@split/model";
 import type { Prisma } from "~/prisma/generated/client";
 import { PrismaService } from "../../common/prisma/prisma.service";
@@ -23,7 +25,7 @@ export class ReferralService {
         userReferrals: true,
       },
     });
-    if (existingReferral) return existingReferral;
+    if (existingReferral) throw new GraphQLError(ErrorMessage.MSG_DUPLICATE_REFERRAL);
 
     return this.prisma.$transaction(async (prismaTransaction: Prisma.TransactionClient) => {
       const { eventId, referralProviderInput, userInput } = referralInput;
