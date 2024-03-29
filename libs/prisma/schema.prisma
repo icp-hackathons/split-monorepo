@@ -44,21 +44,23 @@ model AuthToken {
 
 model UserReferral {
     /// 아이디
-    id          String   @id @default(cuid())
+    id               String             @id @default(cuid())
     /// 사용자
-    User        User?    @relation(fields: [userAddress], references: [address])
+    User             User?              @relation(fields: [userAddress], references: [address])
     /// 사용자 지갑 주소
-    userAddress String
+    userAddress      String
     /// 레퍼럴
-    Referral    Referral @relation(fields: [referralId], references: [id])
+    Referral         Referral           @relation(fields: [referralId], references: [id])
     /// 레퍼럴 아이디
-    referralId  String
+    referralId       String
+    /// 레퍼럴 사용자 타입
+    userReferralType USER_REFERRAL_TYPE
     /// 보상 수령 여부
-    claimed     Boolean  @default(false)
+    claimed          Boolean            @default(false)
     /// 생성 일시
-    createdAt   DateTime @default(now()) @db.Timestamp(3)
+    createdAt        DateTime           @default(now()) @db.Timestamp(3)
     /// 수정 일시
-    updatedAt   DateTime @updatedAt @db.Timestamp(3)
+    updatedAt        DateTime           @updatedAt @db.Timestamp(3)
 }
 
 model Referral {
@@ -171,6 +173,11 @@ enum ROLE {
     REFERRAL_PROVIDER
     AFFILIATE
     ADMIN
+}
+
+enum USER_REFERRAL_TYPE {
+    USER
+    REFERRAL_PROVIDER
 }
 
 enum STATUS {

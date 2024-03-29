@@ -1,8 +1,4 @@
 import { Injectable } from "@nestjs/common";
-import { GraphQLError } from "graphql";
-import { ErrorMessage } from "@split/constants";
-import { type EventInput, EventType } from "@split/model";
-import type { Prisma } from "~/prisma/generated/client";
 import { PrismaService } from "../../common/prisma/prisma.service";
 
 @Injectable()
