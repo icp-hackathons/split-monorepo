@@ -17,6 +17,7 @@ export enum Eligibility {
 export interface ProductCardProps {
   type: ProductCardType;
   productName: string;
+  disabled?: boolean;
   totalEarned: number;
   totalClaimed?: number;
   eligibility?: Eligibility;
@@ -31,7 +32,14 @@ export const ProductInfoElement = ({ index, value }: { index: string; value: str
   );
 };
 
-export const ProductCard = ({ type, productName, totalEarned, totalClaimed, eligibility }: ProductCardProps) => {
+export const ProductCard = ({
+  type,
+  productName,
+  totalEarned,
+  totalClaimed,
+  eligibility,
+  disabled = false,
+}: ProductCardProps) => {
   return (
     <div className="flex h-[370px] w-[230px] flex-col items-start justify-between rounded-[5px] border border-theme-blue p-[15px]">
       {/* Product Image */}
@@ -52,15 +60,21 @@ export const ProductCard = ({ type, productName, totalEarned, totalClaimed, elig
       <div className="flex flex-col items-end justify-center gap-2.5 self-stretch">
         <div className="flex flex-col items-start gap-[6px] self-stretch">
           <ProductInfoElement index="Product" value={productName} />
-          {type ? (
+          {type === ProductCardType.AFFILIATE ? (
             <>
               <ProductInfoElement index="Total Earned" value={totalEarned.toString()} />
               <ProductInfoElement index="Total Claimed" value={totalClaimed ? totalClaimed.toString() : "-"} />
             </>
           ) : (
             <>
-              <ProductInfoElement index="Eligibility" value={eligibility ?? Eligibility.AVAILABLE} />
-              <ProductInfoElement index="Claimable Reward" value={totalEarned.toString()} />
+              <ProductInfoElement
+                index="Eligibility"
+                value={eligibility === Eligibility.AVAILABLE ? "Available" : "Claimed"}
+              />
+              <ProductInfoElement
+                index="Claimable Reward"
+                value={eligibility === Eligibility.AVAILABLE ? totalEarned.toString() : "-"}
+              />
             </>
           )}
         </div>
@@ -70,7 +84,7 @@ export const ProductCard = ({ type, productName, totalEarned, totalClaimed, elig
           <Image src={ArrowRight} alt="right" width={12} height={12} />
         </div>
         {/* Claim Button */}
-        <Button className="w-full" description="Claim Reward" />
+        <Button className="w-full" description="Claim Reward" disabled={disabled} />
       </div>
     </div>
   );
