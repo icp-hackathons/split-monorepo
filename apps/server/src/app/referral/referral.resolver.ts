@@ -1,6 +1,6 @@
 import { UseGuards } from "@nestjs/common";
 import { Args, Mutation, Parent, ResolveField, Resolver } from "@nestjs/graphql";
-import { ReferralInfo, ReferralInput } from "@split/model";
+import { ReferralInfo, ReferralInput, UserReferralInfo } from "@split/model";
 import { ReferralService } from "./referral.service";
 import { ApiKeyGuard } from "../../common/guard/api-key.guard";
 
@@ -14,7 +14,7 @@ export class ReferralResolver {
     return this.referralService.addReferral(referralInput);
   }
 
-  @ResolveField("userReferrals", () => [ReferralInfo], { nullable: true })
+  @ResolveField("userReferrals", () => [UserReferralInfo], { nullable: true })
   async resolveUserReferral(@Parent() referralInfo: ReferralInfo) {
     return this.referralService.resolveUserReferral(referralInfo.id);
   }

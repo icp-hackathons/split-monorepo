@@ -16,5 +16,6 @@ export const ErrorMessage = {
 
   // 레퍼럴 관련
   MSG_DUPLICATE_REFERRAL: "Duplicated referral",
+  MSG_INVALID_REFERRAL_PROVIDER: "Invalid referral provider",
   MSG_REFERRAL_UPDATE_FAILED: "Referral update failed",
 };

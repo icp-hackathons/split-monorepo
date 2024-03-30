@@ -1,7 +1,7 @@
 import { Injectable } from "@nestjs/common";
 import { GraphQLError } from "graphql";
 import { ErrorMessage } from "@split/constants";
-import { type ReferralInput, UserReferralType } from "@split/model";
+import { type ReferralInput, Role, UserReferralType } from "@split/model";
 import type { Prisma } from "~/prisma/generated/client";
 import { PrismaService } from "../../common/prisma/prisma.service";
 
@@ -34,17 +34,36 @@ export class ReferralService {
           eventId,
         },
       });
+
+      const referralProvider = await this.prisma.extended.user.findUnique({
+        where: { address: referralProviderInput.userAddress },
+      });
+      if (!referralProvider) throw new GraphQLError(ErrorMessage.MSG_INVALID_REFERRAL_PROVIDER);
+
+      const user = await prismaTransaction.user.upsert({
+        create: {
+          address: userInput.userAddress,
+          role: Role.USER,
+          status: "ACTIVE",
+          nonce: "",
+        },
+        update: {},
+        where: {
+          address: userInput.userAddress,
+        },
+      });
+
       await prismaTransaction.userReferral.create({
         data: {
           referralId: referralInfo.id,
-          userAddress: referralProviderInput.userAddress,
+          userAddress: referralProvider.address,
           userReferralType: UserReferralType.REFERRAL_PROVIDER,
         },
       });
       await prismaTransaction.userReferral.create({
         data: {
           referralId: referralInfo.id,
-          userAddress: userInput.userAddress,
+          userAddress: user.address,
           userReferralType: UserReferralType.USER,
         },
       });
