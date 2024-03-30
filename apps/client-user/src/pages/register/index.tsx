@@ -1,7 +1,12 @@
 import clsx from "clsx";
+import { ethers } from "ethers";
 import Image from "next/image";
 import { useState } from "react";
+// import { EventType } from "@split/model";
+import { useNetwork } from "wagmi";
 import { useCreateProduct, useSetIncentivePool } from "@split/graphql";
+import { useDeployPool } from "@split/hooks";
+import type { ProductUpdateInput } from "@split/model";
 import { Button, Dropdown, TextField } from "@split/ui";
 import close from "../../../public/shared/icons/Group 6.svg";
 import addItem from "../../../public/shared/icons/addItem.svg";
@@ -31,6 +36,7 @@ export const Register = () => {
     totalTxs: "",
   });
   const [isEventAdded, setIsEventAdded] = useState(false);
+  const [id, setId] = useState<string>("");
 
   const handleNextStep = () => {
     if (step < 4) {
@@ -62,7 +68,11 @@ export const Register = () => {
         },
       },
     });
-    // data?.createProduct.id;
+    const createdProductId = data?.createProduct?.id;
+
+    if (createdProductId) {
+      setId(createdProductId);
+    }
   };
 
   const [setIncentivePool] = useSetIncentivePool({
@@ -74,31 +84,31 @@ export const Register = () => {
     },
   });
 
-  // const handleSetIncentivePool = async () => {
-  //   // const input: ProductUpdateInput = {
-  //   //   events: eventType,
-  //   //   id: ,
-  //   //   incentivePool: eventInfo.address,
-  //   // };
+  const { handleDeployContract } = useDeployPool();
 
-  //   await setIncentivePool({
-  //     variables: {
-  //       input,
-  //     },
-  //   });
-  // };
+  const handleSetIncentivePool = async () => {
+    const input: ProductUpdateInput = {
+      events: [
+        {
+          name: eventInfo.eventName,
+          providerAmountPerEvent: eventInfo.affiliateAmount,
+          type: eventType === "Transaction" ? "TRANSACTION" : "NON_TRANSACTION",
+          userAmountPerEvent: eventInfo.userAmount,
+        },
+      ],
+      id,
+      incentivePool: {
+        incentiveAddress: "",
+        poolAddress: "",
+      },
+    };
 
-  // const createIncentivePoolReq = {
-  //   incentiveInfo: {
-  //     incentiveToken: testUSDC.address,
-  //     incentiveAmountPerTransaction: ethers.utils.parseEther("0.101"), // 0.101 USDC
-  //     affiliateAmountPerTransaction: ethers.utils.parseEther("0.1"), // 0.1 USDC
-  //     userAmountPerTransaction: ethers.utils.parseEther("0.001"), // 0.001 USDC
-  //     leftTransactionNum: 1000, // Total 101 USDC
-  //     maxTransactionNumPerWallet: 5,
-  //     endTimeStamp: ethers.constants.MaxUint256,
-  //   },
-  // };
+    await setIncentivePool({
+      variables: {
+        input,
+      },
+    });
+  };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>, fieldName: string) => {
     const { value } = e.target;
@@ -337,7 +347,7 @@ export const Register = () => {
             <p className="text-16/semi-bold">API Key</p>
             <div className="bg-gray-25 p-[10px]">
               <div className="flex flex-row justify-between">
-                <p className="text-13/regular">key container서버에서 받아옴</p>
+                <p className="text-13/regular">7d0a3cdeca88a00c07b2caf712b2621f</p>
                 <Image src={copy} alt="copy" />
               </div>
             </div>
@@ -427,7 +437,19 @@ export const Register = () => {
               type="button"
               color="blue"
               className="mr-2 rounded-[5px] px-[30px] py-[16px] text-theme-white"
-              onClick={handlePrevStep} // deploy pool
+              onClick={async () => {
+                await handleDeployContract({
+                  incentiveInfo: {
+                    incentiveToken: eventInfo.address,
+                    incentiveAmountPerTransaction: ethers.utils.parseEther(eventInfo.userAmount), // 0.101 USDC
+                    affiliateAmountPerTransaction: ethers.utils.parseEther(eventInfo.affiliateAmount), // 0.1 USDC
+                    userAmountPerTransaction: ethers.utils.parseEther(eventInfo.userAmount), // 0.001 USDC
+                    leftTransactionNum: 1000, // Total 101 USDC
+                    maxTransactionNumPerWallet: 100,
+                    endTimeStamp: ethers.constants.MaxUint256,
+                  },
+                });
+              }} // deploy pool
               description="Deploy Pool"
               disabled={!isEventAdded}
             />
@@ -437,7 +459,6 @@ export const Register = () => {
               className="rounded-[5px] px-[30px] py-[16px] text-theme-white"
               onClick={handleNextStep}
               description="Next"
-              disabled // 트잭 성공시 활성화
             />
           </>
         );
