@@ -33,7 +33,7 @@ export const ProductInfoElement = ({ index, value }: { index: string; value: str
 
 export const ProductCard = ({ type, productName, totalEarned, totalClaimed, eligibility }: ProductCardProps) => {
   return (
-    <div className="flex h-[350px] w-[230px] flex-col items-start justify-between rounded-[5px] border border-theme-blue p-[15px]">
+    <div className="flex h-[370px] w-[230px] flex-col items-start justify-between rounded-[5px] border border-theme-blue p-[15px]">
       {/* Product Image */}
       <div className="flex h-[150px] items-center justify-center self-stretch bg-gray-25">
         <Image src={DefaultImage} alt="DefaultImage" width={23} height={20} />
@@ -41,8 +41,9 @@ export const ProductCard = ({ type, productName, totalEarned, totalClaimed, elig
       {/* Tag */}
       <div
         className={clsx(
-          "flex items-center gap-2.5 rounded-[5px] bg-violet-700 px-2 py-1",
+          "flex items-center gap-2.5 rounded-[5px] px-2 py-1",
           "text-10/regular text-theme-white",
+          type === ProductCardType.AFFILIATE ? "bg-theme-blue" : "bg-violet-700",
         )}
       >
         {type === ProductCardType.AFFILIATE ? "Worked as Affiliate" : "Participated at User"}

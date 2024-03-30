@@ -10,7 +10,7 @@ const mockBriefInfos = [
 
 export const Dashboard = () => {
   return (
-    <div className="flex flex-col gap-10">
+    <div className="flex flex-col gap-10 px-[60px] py-[30px]">
       {/* Briefs */}
       <div className="flex items-center justify-between gap-8">
         <Brief description="In This Month" lastUpdated={new Date()} briefInfos={mockBriefInfos} />

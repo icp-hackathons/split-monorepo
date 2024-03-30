@@ -88,4 +88,10 @@ export class UserService {
   async findUserByAddress(userInput: UserInput) {
     return this.prisma.extended.user.findUnique({ where: userInput });
   }
+
+  async findUserReferrals(userAddress: string) {
+    return this.prisma.extended.userReferral.findMany({
+      where: { userAddress },
+    });
+  }
 }
