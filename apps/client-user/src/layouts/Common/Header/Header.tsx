@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { useAuth } from "@split/graphql";
 import { useConnectWallet } from "@split/hooks";
 import { Button, NetworkStatus } from "@split/ui";
 import { formatAddress, formatChainId } from "@split/utils";
@@ -76,10 +77,11 @@ const tabs = [
 ];
 
 export const Header = () => {
+  const { isAuthenticated } = useAuth();
   const { address, chain, handleConnect, handleDisconnect } = useConnectWallet();
   const chainId = chain?.id;
 
-  const handleWalletConnect = async () => {
+  const handleWalletConnect = () => {
     if (!address) {
       handleConnect();
     } else {
@@ -94,13 +96,13 @@ export const Header = () => {
         <Tab tabs={tabs} />
       </div>
       <div className="flex items-center gap-[30px]">
-        {!address || !chainId ? (
-          <Button description="Sign in" onClick={handleWalletConnect} />
-        ) : (
+        {isAuthenticated ? (
           <div className="flex items-center gap-[30px]">
             <NetworkStatus chainId={formatChainId(chainId)} />
             <Button icon={MetamaskIcon} description={formatAddress(address)} onClick={handleWalletConnect} />
           </div>
+        ) : (
+          <Button description="Sign in" onClick={handleWalletConnect} />
         )}
       </div>
     </div>

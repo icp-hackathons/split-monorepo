@@ -1,0 +1,3 @@
+[submodule "apps/contract"]
+	path = apps/contract
+	url = https://github.com/mijungee/split-contract.git

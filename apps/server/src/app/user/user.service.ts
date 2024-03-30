@@ -3,7 +3,7 @@ import * as bcrypt from "bcrypt";
 import { GraphQLError } from "graphql";
 import { SiweMessage, generateNonce } from "siwe";
 import { ErrorMessage } from "@split/constants";
-import { ROLE } from "@split/model";
+import { Role } from "@split/model";
 import type { TokenInput, UserInput, VerifyUserInput } from "@split/model";
 import { AuthService } from "./auth/auth.service";
 import { PrismaService } from "../../common/prisma/prisma.service";
@@ -22,7 +22,7 @@ export class UserService {
     const userInfo = await this.prisma.user.upsert({
       create: {
         address: userInput.address,
-        role: ROLE.USER,
+        role: Role.USER,
         status: "ACTIVE",
         nonce,
       },

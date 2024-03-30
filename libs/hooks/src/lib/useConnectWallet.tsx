@@ -1,9 +1,9 @@
 import { useCallback, useEffect, useState } from "react";
 import { SiweMessage } from "siwe";
 import { useAccount, useConnect, useDisconnect, useNetwork, useSignMessage } from "wagmi";
-import { useRequestLogin, useVerifyLogin } from "@split/graphql";
+import { AuthTokenManager, useAuth, useRequestLogin, useVerifyLogin } from "@split/graphql";
 
-export enum LoginState {
+export enum InternalLoginState {
   NOT_STARTED = "not_started",
   PROGRESS = "progress",
   DONE = "done",
@@ -14,9 +14,10 @@ export const useConnectWallet = () => {
   const { disconnect } = useDisconnect();
   const { address } = useAccount();
   const { chain } = useNetwork();
+  const { setIsAuthenticated } = useAuth();
   const { signMessageAsync } = useSignMessage();
 
-  const [loginState, setLoginState] = useState<LoginState>(LoginState.NOT_STARTED);
+  const [internalLoginState, setInternalLoginState] = useState<InternalLoginState>(InternalLoginState.NOT_STARTED);
 
   // TODO: Snack 추가
   const [requestLogin] = useRequestLogin({
@@ -38,20 +39,22 @@ export const useConnectWallet = () => {
   });
 
   const handleConnect = () => {
-    setLoginState(LoginState.PROGRESS);
+    setInternalLoginState(InternalLoginState.PROGRESS);
     try {
       const metamaskConnector = connectors[0];
       connect({ connector: metamaskConnector });
     } catch (error) {
       console.log(error);
-      setLoginState(LoginState.NOT_STARTED);
+      setInternalLoginState(InternalLoginState.NOT_STARTED);
     }
   };
 
-  const handleDisconnect = () => {
+  const handleDisconnect = useCallback(() => {
     disconnect();
-    setLoginState(LoginState.NOT_STARTED);
-  };
+    setInternalLoginState(InternalLoginState.NOT_STARTED);
+    setIsAuthenticated(false);
+    AuthTokenManager.removeToken();
+  }, [disconnect, setIsAuthenticated]);
 
   const login = useCallback(async () => {
     try {
@@ -59,8 +62,8 @@ export const useConnectWallet = () => {
       if (!address || !chainId) return;
 
       // 1. 서버에 로그인 요청
-      const { data } = await requestLogin({ variables: { input: { address } } });
-      const nonce = data?.requestLogin.nonce;
+      const { data: requestLoginData } = await requestLogin({ variables: { input: { address } } });
+      const nonce = requestLoginData?.requestLogin.nonce;
 
       // 2. 메시지 및 서명 생성
       const message = new SiweMessage({
@@ -76,21 +79,29 @@ export const useConnectWallet = () => {
         message: message.prepareMessage(),
       });
 
-      // 3. 해당 메시지 및 서명으로 로그인 수행, JWT 토큰 가져옴
-      await verifyLogin({ variables: { input: { message: message.toMessage(), signature } } });
+      // 3. 해당 메시지 및 서명으로 로그인 수행, JWT 토큰 가져와서 저장
+      const { data: verifyLoginData } = await verifyLogin({
+        variables: { input: { message: message.toMessage(), signature } },
+      });
+      const token = verifyLoginData?.verifyLogin;
+      if (token) {
+        AuthTokenManager.setToken(token, {});
+      }
 
-      setLoginState(LoginState.DONE);
+      // 4. 상태 변경
+      setInternalLoginState(InternalLoginState.DONE);
+      setIsAuthenticated(true);
     } catch (error) {
       console.log(error);
-      setLoginState(LoginState.NOT_STARTED);
+      handleDisconnect();
     }
-  }, [address, chain, requestLogin, verifyLogin, signMessageAsync]);
+  }, [address, chain, requestLogin, verifyLogin, signMessageAsync, setIsAuthenticated, handleDisconnect]);
 
   useEffect(() => {
-    if (address && loginState === LoginState.PROGRESS) {
+    if (address && internalLoginState === InternalLoginState.PROGRESS) {
       login();
     }
-  }, [address, loginState, login]);
+  }, [address, internalLoginState, login]);
 
   return { address, chain, handleConnect, handleDisconnect };
 };

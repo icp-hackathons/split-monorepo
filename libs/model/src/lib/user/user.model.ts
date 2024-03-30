@@ -1,6 +1,6 @@
 import { Field, ID, ObjectType } from "@nestjs/graphql";
-import { ROLE } from "../enum/role.enum";
-import { STATUS } from "../enum/status.enum";
+import { Role } from "../enum/role.enum";
+import { Status } from "../enum/status.enum";
 
 @ObjectType({ description: "사용자 정보" })
 export class UserInfo {
@@ -10,11 +10,11 @@ export class UserInfo {
   @Field(() => String, { nullable: false, description: "지갑 주소" })
   address!: string;
 
-  @Field(() => ROLE, { nullable: false, description: "역할" })
-  role!: keyof typeof ROLE;
+  @Field(() => Role, { nullable: false, description: "역할" })
+  role!: keyof typeof Role;
 
-  @Field(() => STATUS, { nullable: false, description: "역할" })
-  status!: keyof typeof STATUS;
+  @Field(() => Status, { nullable: false, description: "역할" })
+  status!: keyof typeof Status;
 
   @Field(() => String, { nullable: false, description: "로그인용 일회용 논스" })
   nonce!: string;
