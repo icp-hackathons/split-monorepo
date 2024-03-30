@@ -2,7 +2,7 @@ import { Injectable } from "@nestjs/common";
 import * as crypto from "crypto";
 import { GraphQLError } from "graphql";
 import { ErrorMessage } from "@split/constants";
-import type { ProductCreateInput, ProductUpdateInput } from "@split/model";
+import { type ProductCreateInput, type ProductUpdateInput, SupportedNetwork } from "@split/model";
 import type { Prisma } from "~/prisma/generated/client";
 import { ContractFactory } from "../../common/contract/contract.factory";
 import { PrismaService } from "../../common/prisma/prisma.service";
@@ -50,12 +50,20 @@ export class ProductService {
     if (!isDeployerExist || !poolAddress) throw new GraphQLError(ErrorMessage.MSG_NOT_FOUND_INCENTIVE_POOL);
 
     return this.prisma.$transaction(async (prismaTransaction: Prisma.TransactionClient) => {
-      const { id, events, ...productInputs } = productInput;
+      const { id, events, incentivePool, ...productInputs } = productInput;
       const apiKey = this.generateApiKey();
 
       const productInfo = await prismaTransaction.product.update({
         where: { id },
         data: { ...productInputs, apiKey },
+      });
+
+      await prismaTransaction.incentivePool.create({
+        data: {
+          ...incentivePool,
+          poolNetwork: SupportedNetwork.SEPOLIA_TESTNET,
+          productId: productInfo.id,
+        },
       });
 
       // NOTE: 현재는 단일 이벤트만 등록 가능
