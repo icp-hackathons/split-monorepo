@@ -10,6 +10,7 @@ export * from "./lib/user/verify-user.input";
 export * from "./lib/product/product.create.input";
 export * from "./lib/product/product.update.input";
 export * from "./lib/product/product.model";
+export * from "./lib/product/incentive-pool.input";
 
 // Event
 export * from "./lib/event/event.input";
@@ -31,3 +32,4 @@ export * from "./lib/enum/role.enum";
 export * from "./lib/enum/status.enum";
 export * from "./lib/enum/event-type.enum";
 export * from "./lib/enum/user-referral-type.enum";
+export * from "./lib/enum/supported-network.enum";
