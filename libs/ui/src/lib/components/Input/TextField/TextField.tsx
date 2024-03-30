@@ -44,7 +44,7 @@ export const TextField = forwardRef<HTMLInputElement, TextFieldProps>(function T
   return (
     <div className={clsx("inline-flex flex-col items-start gap-2.5", className)}>
       {!!label && <Label htmlFor={id} description={label} tooltip={tooltip} />}
-      <div className="flex flex-col items-start gap-[3px]">
+      <div className="flex flex-col items-start gap-[3px] self-stretch">
         <div
           className={clsx(
             "flex h-10 items-center gap-2.5 self-stretch rounded-[5px] border border-theme-gray px-2.5",

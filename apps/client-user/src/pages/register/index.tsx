@@ -1,6 +1,8 @@
 import clsx from "clsx";
+import Image from "next/image";
 import { useState } from "react";
-import { Dropdown, TextField } from "@split/ui";
+import { Button, Dropdown, TextField } from "@split/ui";
+import Congrats from "../../../public/shared/images/Congrats.png";
 import RegisterProducts from "../../components/Register/RegisterProducts/RegisterProducts";
 import { Header } from "../../layouts/Common/Header/Header";
 import SubHeader from "../../layouts/Common/SubHeader/SubHeader";
@@ -58,23 +60,23 @@ export const Register = () => {
       case 1:
         return (
           <>
-            <div className="flex flex-col gap-[10px]">
+            <div className="flex w-[400px] flex-col gap-[10px]">
               <p>Product Name</p>
               <TextField placeholder="e.g. Split" />
             </div>
-            <div className="flex flex-col gap-[10px]">
+            <div className="flex w-[400px] flex-col gap-[10px]">
               <p>Web Link</p>
               <TextField placeholder="e.g. https://split.io" />
             </div>
-            <div className="flex flex-col gap-[10px]">
+            <div className="flex w-[400px] flex-col gap-[10px]">
               <p>Twitter Link</p>
               <TextField placeholder="e.g. https://twitter.com/split_official" />
             </div>
-            <div className="flex flex-col gap-[10px]">
+            <div className="flex w-[800px] flex-col gap-[10px]">
               <p>Product Description</p>
               <TextField placeholder="e.g. Split is an affiliate marketing service for Web3 apps." />
             </div>
-            <div className="flex flex-col gap-[10px]">
+            <div className="flex w-[200px] flex-col gap-[10px]">
               <p>Network</p>
               <Dropdown options={options} />
             </div>
@@ -83,15 +85,15 @@ export const Register = () => {
       case 2:
         return (
           <>
-            <div className="flex flex-col gap-[10px]">
+            <div className="flex w-[400px] flex-col gap-[10px]">
               <p>Address for Incentive Token</p>
               <TextField placeholder="e.g. 0x1a2b3c4d5e6f..." />
             </div>
-            <div className="flex flex-col gap-[10px]">
+            <div className="flex w-[400px] flex-col gap-[10px]">
               <p>Incentive Amount for Tx </p>
               <TextField placeholder="e.g. https://split.io" />
             </div>
-            <div className="flex flex-col gap-[10px]">
+            <div className="flex w-[400px] flex-col gap-[10px]">
               <p>Total Txs</p>
               <TextField placeholder="e.g. https://twitter.com/split_official" />
             </div>
@@ -100,7 +102,11 @@ export const Register = () => {
       case 3:
         return <div>get API Keys</div>;
       case 4:
-        return <div>image</div>;
+        return (
+          <div className="mb-10 mt-10">
+            <Image src={Congrats} alt="congratulations" />
+          </div>
+        );
       default:
         return null;
     }
@@ -109,61 +115,61 @@ export const Register = () => {
     switch (step) {
       case 1:
         return (
-          <button
+          <Button
             type="button"
-            className="rounded-[5px] bg-gray-500 px-[30px] py-[16px] text-theme-white"
+            color="blue"
+            className="rounded-[5px] px-[30px] py-[16px] text-theme-white"
             onClick={handleNextStep}
-          >
-            Next
-          </button>
+            description="Next"
+          />
         );
       case 2:
         return (
           <>
-            <button
+            <Button
               type="button"
-              className="rounded-[5px] bg-gray-500 px-[30px] py-[16px] text-theme-white"
+              color="blue"
+              className="mr-2 rounded-[5px] px-[30px] py-[16px] text-theme-white"
               onClick={handlePrevStep}
-            >
-              Deploy Pool
-            </button>
-            <button
+              description="Deploy Pool"
+            />
+            <Button
               type="button"
-              className="rounded-[5px] bg-gray-500 px-[30px] py-[16px] text-theme-white"
+              color="blue"
+              className="rounded-[5px] px-[30px] py-[16px] text-theme-white"
               onClick={handleNextStep}
-            >
-              Next
-            </button>
+              description="Next"
+            />
           </>
         );
       case 3:
         return (
           <>
-            <button
+            <Button
               type="button"
-              className="rounded-[5px] bg-gray-500 px-[30px] py-[16px] text-theme-white"
+              color="blue"
+              className="mr-2 rounded-[5px] px-[30px] py-[16px] text-theme-white"
               onClick={handlePrevStep}
-            >
-              Integration Test
-            </button>
-            <button
+              description="Integration Test"
+            />
+            <Button
               type="button"
-              className="rounded-[5px] bg-gray-500 px-[30px] py-[16px] text-theme-white"
+              color="blue"
+              className="rounded-[5px] px-[30px] py-[16px] text-theme-white"
               onClick={handleNextStep}
-            >
-              Next
-            </button>
+              description="Next"
+            />
           </>
         );
       case 4:
         return (
-          <button
+          <Button
             type="button"
-            className="rounded-[5px] bg-gray-500 px-[30px] py-[16px] text-theme-white"
+            color="blue"
+            className="rounded-[5px] px-[30px] py-[16px] text-theme-white"
             onClick={handlePrevStep}
-          >
-            Go to dashboard
-          </button>
+            description="Go to dashboard"
+          />
         );
       default:
         return null;
@@ -174,15 +180,14 @@ export const Register = () => {
     <div className="flex h-full w-full flex-col">
       <Header />
       <SubHeader />
-
-      <div className={clsx("flex flex-row gap-[60px] pl-[60px]")}>
+      <div className={clsx("flex flex-row gap-[60px] pl-[60px] pr-[60px]")}>
         <RegisterProducts step={step} />
         <div className="mt-[30px] h-full w-[2px] bg-gray-200" />
         <div className="mt-[30px] flex h-full  w-full flex-col gap-10">
           <div className="flex flex-col gap-5">
             <p className="text-[24px] font-semibold">{title}</p>
             <p className="text-16/regular">{subtitle}</p>
-            <div className="flex flex-col gap-5">{renderContentsField()}</div>
+            <div className="flex w-full flex-col gap-5">{renderContentsField()}</div>
           </div>
           <div className="flex justify-end">{renderButtons()}</div>
         </div>
