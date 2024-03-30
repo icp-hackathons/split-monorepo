@@ -81,5 +81,12 @@
     "tailwindcss",
     "typechain",
     "wagmi"
-  ]
+  ],
+  "files.associations": {
+    "*html": "html",
+    "*.css": "tailwindcss"
+  },
+  "editor.quickSuggestions": {
+    "strings": true
+  },
 }
