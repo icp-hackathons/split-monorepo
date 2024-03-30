@@ -1,13 +1,11 @@
-import RegisterProducts from "../../components/Register/RegisterProducts/RegisterProducts";
+import { Header } from "../../layouts/Common/Header/Header";
+import { Dashboard } from "../../layouts/Dashboard/Dashboard";
 
 export const User = () => {
   return (
-    <div>
-      <h1>User</h1>
-      <RegisterProducts step={1} />
-      <RegisterProducts step={2} />
-      <RegisterProducts step={3} />
-      <RegisterProducts step={4} />
+    <div className="flex h-full w-full flex-col">
+      <Header />
+      <Dashboard />
     </div>
   );
 };

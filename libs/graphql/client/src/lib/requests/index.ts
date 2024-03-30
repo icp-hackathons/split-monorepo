@@ -6,4 +6,5 @@ export * from "./mutations/createProduct";
 export * from "./mutations/setIncentivePool";
 
 // queries
+export * from "./queries/findProduct";
 export * from "./queries/findUserByAddress";
