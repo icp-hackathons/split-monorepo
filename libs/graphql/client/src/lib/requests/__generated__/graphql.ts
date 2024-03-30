@@ -60,6 +60,13 @@ export type EventType =
   | 'NON_TRANSACTION'
   | 'TRANSACTION';
 
+export type IncentivePoolInput = {
+  /** 보상 풀 토큰 주소 */
+  incentiveAddress: Scalars['String']['input'];
+  /** 보상 풀 주소 */
+  poolAddress: Scalars['String']['input'];
+};
+
 export type Mutation = {
   addReferral: ReferralInfo;
   createProduct: ProductInfo;
@@ -141,6 +148,8 @@ export type ProductUpdateInput = {
   events?: InputMaybe<Array<EventInput>>;
   /** 제품 아이디 */
   id: Scalars['ID']['input'];
+  /** 보상 풀 입력값 */
+  incentivePool?: InputMaybe<IncentivePoolInput>;
 };
 
 export type Query = {
