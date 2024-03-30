@@ -25,7 +25,11 @@ export const TabDropdownElement = ({ type, title, description, targetUrl }: TabD
       onMouseEnter={() => setIsMouseEntered(true)}
       onMouseLeave={() => setIsMouseEntered(false)}
       onClick={() => {
-        router.push(targetUrl);
+        if (targetUrl === "/demo") {
+          window.location.href = "http://localhost:4201";
+        } else {
+          router.push(targetUrl);
+        }
       }}
     >
       <TabDropdownIcon type={type} />

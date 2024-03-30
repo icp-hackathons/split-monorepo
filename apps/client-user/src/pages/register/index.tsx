@@ -1,9 +1,8 @@
 import clsx from "clsx";
 import { ethers } from "ethers";
 import Image from "next/image";
+import { useRouter } from "next/router";
 import { useState } from "react";
-// import { EventType } from "@split/model";
-import { useNetwork } from "wagmi";
 import { useCreateProduct, useSetIncentivePool } from "@split/graphql";
 import { useDeployPool } from "@split/hooks";
 import type { ProductUpdateInput } from "@split/model";
@@ -12,13 +11,15 @@ import close from "../../../public/shared/icons/Group 6.svg";
 import addItem from "../../../public/shared/icons/addItem.svg";
 import copy from "../../../public/shared/icons/copy.svg";
 import rightArrow from "../../../public/shared/icons/rightArrow.svg";
-import Congrats from "../../../public/shared/images/Congrats.png";
+import Congrat from "../../../public/shared/images/Congrat.png";
 import USDC from "../../../public/shared/images/USDC.png";
 import RegisterProducts from "../../components/Register/RegisterProducts/RegisterProducts";
 import { Header } from "../../layouts/Common/Header/Header";
 import SubHeader from "../../layouts/Common/SubHeader/SubHeader";
 
 export const Register = () => {
+  const router = useRouter();
+
   const [step, setStep] = useState<number>(1);
   const [productInfo, setProductInfo] = useState({
     name: "",
@@ -148,7 +149,7 @@ export const Register = () => {
   const options = [
     { value: "Ethereum", label: "Ethereum" },
     { value: "ICP", label: "ICP" },
-    { value: "Viction", label: "Viction" },
+    { value: "Near Protocol", label: "Near Protocol" },
   ];
 
   const handleModalInputChange = (e: React.ChangeEvent<HTMLInputElement>, fieldName: string): void => {
@@ -411,7 +412,7 @@ export const Register = () => {
       case 4:
         return (
           <div className="mb-10 mt-10">
-            <Image src={Congrats} alt="congratulations" />
+            <Image src={Congrat} alt="congratulations" width={300} height={300} />
           </div>
         );
       default:
@@ -459,6 +460,7 @@ export const Register = () => {
               className="rounded-[5px] px-[30px] py-[16px] text-theme-white"
               onClick={handleNextStep}
               description="Next"
+              disabled={!isEventAdded}
             />
           </>
         );
@@ -487,7 +489,9 @@ export const Register = () => {
             type="button"
             color="blue"
             className="rounded-[5px] px-[30px] py-[16px] text-theme-white"
-            onClick={handlePrevStep}
+            onClick={() => {
+              router.push("/");
+            }}
             description="Go to dashboard"
           />
         );
