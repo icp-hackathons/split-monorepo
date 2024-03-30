@@ -18,6 +18,7 @@ export * from "./lib/event/referral.input";
 export * from "./lib/event/referral.model";
 export * from "./lib/event/transaction.input";
 export * from "./lib/event/transaction.model";
+export * from "./lib/event/update-referral.dto";
 export * from "./lib/event/user-referral.input";
 export * from "./lib/event/user-referral.model";
 

@@ -15,6 +15,9 @@ export class UserReferralInfo {
   @Field(() => UserReferralType, { nullable: false, description: "레퍼럴 사용자 타입" })
   userReferralType!: keyof typeof UserReferralType;
 
+  @Field(() => Boolean, { nullable: false, description: "컨트랙트 업데이트 여부" })
+  updated!: boolean;
+
   @Field(() => Boolean, { nullable: false, description: "보상 수령 여부" })
   claimed!: boolean;
 

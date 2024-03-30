@@ -29,3 +29,5 @@ const getProvider = () => {
 
 export const provider = getProvider();
 export const wallet = new ethers.Wallet(privateKey, getProvider());
+
+export const GAS_PRICE = 1000000000;
