@@ -1,14 +1,36 @@
 import clsx from "clsx";
 import Image from "next/image";
 import { useState } from "react";
+import { useCreateProduct, useSetIncentivePool } from "@split/graphql";
 import { Button, Dropdown, TextField } from "@split/ui";
+import close from "../../../public/shared/icons/Group 6.svg";
+import addItem from "../../../public/shared/icons/addItem.svg";
+import copy from "../../../public/shared/icons/copy.svg";
+import rightArrow from "../../../public/shared/icons/rightArrow.svg";
 import Congrats from "../../../public/shared/images/Congrats.png";
+import USDC from "../../../public/shared/images/USDC.png";
 import RegisterProducts from "../../components/Register/RegisterProducts/RegisterProducts";
 import { Header } from "../../layouts/Common/Header/Header";
 import SubHeader from "../../layouts/Common/SubHeader/SubHeader";
 
 export const Register = () => {
-  const [step, setStep] = useState(1);
+  const [step, setStep] = useState<number>(1);
+  const [productInfo, setProductInfo] = useState({
+    name: "",
+    webLink: "",
+    twitterLink: "",
+    description: "",
+  });
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [eventType, setEventType] = useState("Transaction");
+  const [eventInfo, setEventInfo] = useState({
+    eventName: "",
+    address: "",
+    affiliateAmount: "",
+    userAmount: "",
+    totalTxs: "",
+  });
+  const [isEventAdded, setIsEventAdded] = useState(false);
 
   const handleNextStep = () => {
     if (step < 4) {
@@ -20,6 +42,70 @@ export const Register = () => {
     if (step > 1) {
       setStep(step - 1);
     }
+  };
+
+  const [createProduct] = useCreateProduct({
+    onCompleted: () => {
+      handleNextStep();
+      console.log("success create product");
+    },
+    onError: (error) => {
+      console.log(error);
+    },
+  });
+
+  const handleCreateProduct = async () => {
+    const { data } = await createProduct({
+      variables: {
+        input: {
+          ...productInfo,
+        },
+      },
+    });
+    // data?.createProduct.id;
+  };
+
+  const [setIncentivePool] = useSetIncentivePool({
+    onCompleted: () => {
+      console.log("success create product");
+    },
+    onError: (error) => {
+      console.log(error);
+    },
+  });
+
+  // const handleSetIncentivePool = async () => {
+  //   // const input: ProductUpdateInput = {
+  //   //   events: eventType,
+  //   //   id: ,
+  //   //   incentivePool: eventInfo.address,
+  //   // };
+
+  //   await setIncentivePool({
+  //     variables: {
+  //       input,
+  //     },
+  //   });
+  // };
+
+  // const createIncentivePoolReq = {
+  //   incentiveInfo: {
+  //     incentiveToken: testUSDC.address,
+  //     incentiveAmountPerTransaction: ethers.utils.parseEther("0.101"), // 0.101 USDC
+  //     affiliateAmountPerTransaction: ethers.utils.parseEther("0.1"), // 0.1 USDC
+  //     userAmountPerTransaction: ethers.utils.parseEther("0.001"), // 0.001 USDC
+  //     leftTransactionNum: 1000, // Total 101 USDC
+  //     maxTransactionNumPerWallet: 5,
+  //     endTimeStamp: ethers.constants.MaxUint256,
+  //   },
+  // };
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>, fieldName: string) => {
+    const { value } = e.target;
+    setProductInfo((prevProductInfo) => ({
+      ...prevProductInfo,
+      [fieldName]: value,
+    }));
   };
 
   const getTitleAndSubtitle = (currentStep: number): { title: string; subtitle: string } => {
@@ -55,26 +141,57 @@ export const Register = () => {
     { value: "Viction", label: "Viction" },
   ];
 
+  const handleModalInputChange = (e: React.ChangeEvent<HTMLInputElement>, fieldName: string): void => {
+    const { value } = e.target;
+    setEventInfo((prevState) => ({
+      ...prevState,
+      [fieldName]: value,
+    }));
+  };
+
+  const handleAddEvent = () => {
+    console.log("Selected Event Type:", eventType);
+    console.log("Event Info:", eventInfo);
+    setIsEventAdded(true);
+    setIsModalOpen(false);
+  };
+
   const renderContentsField = () => {
     switch (step) {
       case 1:
         return (
           <>
             <div className="flex w-[400px] flex-col gap-[10px]">
-              <p>Product Name</p>
-              <TextField placeholder="e.g. Split" />
+              <TextField
+                label="Product Name"
+                placeholder="e.g. Split"
+                value={productInfo.name}
+                onChange={(e) => handleInputChange(e, "name")}
+              />
             </div>
             <div className="flex w-[400px] flex-col gap-[10px]">
-              <p>Web Link</p>
-              <TextField placeholder="e.g. https://split.io" />
+              <TextField
+                label="Web Link"
+                placeholder="e.g. https://split.io"
+                value={productInfo.webLink}
+                onChange={(e) => handleInputChange(e, "webLink")}
+              />
             </div>
             <div className="flex w-[400px] flex-col gap-[10px]">
-              <p>Twitter Link</p>
-              <TextField placeholder="e.g. https://twitter.com/split_official" />
+              <TextField
+                label="Twitter Link"
+                placeholder="e.g. https://twitter.com/split_official"
+                value={productInfo.twitterLink}
+                onChange={(e) => handleInputChange(e, "twitterLink")}
+              />
             </div>
             <div className="flex w-[800px] flex-col gap-[10px]">
-              <p>Product Description</p>
-              <TextField placeholder="e.g. Split is an affiliate marketing service for Web3 apps." />
+              <TextField
+                label="Product Description"
+                placeholder="e.g. Split is an affiliate marketing service for Web3 apps."
+                value={productInfo.description}
+                onChange={(e) => handleInputChange(e, "description")}
+              />
             </div>
             <div className="flex w-[200px] flex-col gap-[10px]">
               <p>Network</p>
@@ -85,22 +202,202 @@ export const Register = () => {
       case 2:
         return (
           <>
-            <div className="flex w-[400px] flex-col gap-[10px]">
-              <p>Address for Incentive Token</p>
-              <TextField placeholder="e.g. 0x1a2b3c4d5e6f..." />
+            <div className="text-16/semi-bold">Configure Event</div>
+            <div className="flex flex-row gap-5">
+              <div className="flex flex-row justify-between bg-gray-200 px-5 py-3">
+                <div className="mr-[30px] flex flex-col gap-2">
+                  <p className="text-13/semi-bold">Connect Wallet</p>
+                  <p className="text-10/regular">Click to edit</p>
+                </div>
+                <Image src={rightArrow} alt="arrow" />
+              </div>
+              <div className="flex flex-row justify-between bg-gray-200 px-5 py-3">
+                <div className="mr-[30px] flex flex-col gap-2">
+                  <p className="text-13/semi-bold">Add Liquidity</p>
+                  <p className="text-10/regular">Click to edit</p>
+                </div>
+                <Image src={rightArrow} alt="arrow" />
+              </div>
+              <button
+                type="button"
+                className="justify-betwee flex flex-row border border-black px-5 py-3"
+                onClick={() => setIsModalOpen(true)}
+              >
+                <div className="mr-[30px] flex flex-col gap-2">
+                  <p className="text-left text-13/semi-bold">Add Event</p>
+                  <p className="text-10/regular">Configure event option</p>
+                </div>
+                <Image src={addItem} alt="addItem" />
+              </button>
+              {isModalOpen && (
+                <div className="fixed left-0 top-0 flex h-full w-full items-center justify-center bg-gray-900 bg-opacity-50">
+                  <div className="flex flex-col gap-[10px] rounded-lg bg-white p-8">
+                    <div>
+                      <div className="mb-[30px] flex flex-row justify-between">
+                        <p className="semi-bold  text-[24px] ">Add Event</p>
+                        <Image src={close} alt="close" onClick={() => setIsModalOpen(false)} />
+                      </div>
+                      <p className="mb-[10px] text-16/semi-bold">Event Type</p>
+                      <button
+                        type="button"
+                        className={`mr-[10px] rounded-[16px] px-4 py-2 text-white ${
+                          eventType === "Transaction" ? "bg-blue-800" : "bg-gray-200 text-gray-700"
+                        }`}
+                        onClick={() => setEventType("Transaction")}
+                      >
+                        Transaction
+                      </button>
+                      <button
+                        type="button"
+                        className={`rounded-[16px] px-4 py-2 ${
+                          eventType === "Non-Transaction" ? "bg-blue-800 text-white" : "bg-gray-200 text-gray-700"
+                        }`}
+                        onClick={() => setEventType("Non-Transaction")}
+                      >
+                        Non-Transaction
+                      </button>
+                    </div>
+                    <div className="flex w-[400px] flex-col gap-[10px]">
+                      <TextField
+                        label="Event Name"
+                        placeholder="e.g. Click"
+                        value={eventInfo.eventName}
+                        onChange={(e) => handleModalInputChange(e, "eventName")}
+                      />
+                    </div>
+                    <div className="flex w-[400px] flex-col gap-[10px]">
+                      <TextField
+                        label="Address for Incentive Token"
+                        placeholder="e.g. 0x1a2b3c4d5e6f..."
+                        value={eventInfo.address}
+                        onChange={(e) => handleModalInputChange(e, "address")}
+                      />
+                    </div>
+                    <div className="flex flex-row gap-[30px]">
+                      <div className="flex w-[400px] flex-col gap-[10px]">
+                        <TextField
+                          label="Incentive Amount for Affiliate (per Tx)"
+                          placeholder=""
+                          value={eventInfo.affiliateAmount}
+                          onChange={(e) => handleModalInputChange(e, "affiliateAmount")}
+                        />
+                      </div>
+                      <div className="flex w-[400px] flex-col gap-[10px]">
+                        <TextField
+                          label="Incentive Amount for User (per Tx)"
+                          placeholder=""
+                          value={eventInfo.userAmount}
+                          onChange={(e) => handleModalInputChange(e, "userAmount")}
+                        />
+                      </div>
+                    </div>
+
+                    <div className="flex w-[400px] flex-col gap-[10px]">
+                      <TextField
+                        label="Total Txs"
+                        placeholder=""
+                        value={eventInfo.totalTxs}
+                        onChange={(e) => handleModalInputChange(e, "totalTxs")}
+                      />
+                    </div>
+
+                    <div className="flex justify-end">
+                      <button
+                        type="button"
+                        className="rounded-[16px] bg-blue-800 px-4 py-2 text-white"
+                        onClick={handleAddEvent}
+                      >
+                        Add Event
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              )}
             </div>
-            <div className="flex w-[400px] flex-col gap-[10px]">
-              <p>Incentive Amount for Tx </p>
-              <TextField placeholder="e.g. https://split.io" />
-            </div>
-            <div className="flex w-[400px] flex-col gap-[10px]">
-              <p>Total Txs</p>
-              <TextField placeholder="e.g. https://twitter.com/split_official" />
-            </div>
+            {isEventAdded && (
+              <>
+                <div className="text-13/regular text-gray-600">This is the amounts required to configure:</div>
+                <div className="flex w-[400px] flex-row justify-between">
+                  <div className="flex flex-row align-middle">
+                    <Image src={USDC} alt="USDC" className="h-[33px] w-[33px]" />
+                    <div className="ml-[10px] flex flex-col">
+                      <p className="text-16/semi-bold">USDC</p>
+                      <p className="text-13/regular">USD coin</p>
+                    </div>
+                  </div>
+                  <p className="text-16/semi-bold">10000.00</p>
+                </div>
+              </>
+            )}
           </>
         );
       case 3:
-        return <div>get API Keys</div>;
+        return (
+          <>
+            <p className="text-16/semi-bold">API Key</p>
+            <div className="bg-gray-25 p-[10px]">
+              <div className="flex flex-row justify-between">
+                <p className="text-13/regular">key container서버에서 받아옴</p>
+                <Image src={copy} alt="copy" />
+              </div>
+            </div>
+            <p className="text-16/semi-bold">Integration Guide</p>
+            <p className="text-13/regular text-gray-700">
+              First, copy and add the script below to the page you want to track for user incoming.
+            </p>
+            <div className="bg-gray-25 p-[10px]">
+              <div className="flex flex-row justify-between">
+                <p className="mb-[10px] text-10/regular">HTML</p>
+                <Image src={copy} alt="copy" />
+              </div>
+              <div className="flex w-[497px]">
+                <p className="flex-grow text-[12px] font-medium leading-[normal] tracking-[0] text-transparent [font-family:'Source_Code_Pro-Medium',Helvetica]">
+                  <span className="text-black">&lt;script </span>
+                  <span className="text-[#ff0000]">type=</span>
+                  <span className="text-[#23974b]">&#34;text/javascript&#34;</span>
+                  <span className="text-black">&nbsp;</span>
+                  <span className="text-[#ff0000]">src=</span>
+                  <span className="text-[#23974b]">&#34;./splitsdk/splitsdk.js&#34;</span>
+                  <span className="text-black">&gt;&lt;/script&gt;</span>
+                </p>
+              </div>
+            </div>
+            <p className="text-13/regular text-gray-700">
+              The code below sends the referrer and user&apos;s wallet address data (encrypted for the referrer) to
+              Split when a user referred by a referral link connects their wallet. Insert the code below into your
+              existing wallet linking logic.
+            </p>
+            <div className="bg-gray-25 p-[10px]">
+              <div className="flex flex-row justify-between">
+                <p className="mb-[10px] text-10/regular">Javascript</p>
+                <Image src={copy} alt="copy" />
+              </div>
+
+              <div className="w-auto">
+                <p className="h-[45px] text-[12px] font-medium leading-[normal] tracking-[0] text-transparent [font-family:'Source_Code_Pro-Medium',Helvetica]">
+                  <span className="text-black">const referralWalletCode = urlParams.</span>
+                  <span className="text-[#0868b9]">get</span>
+                  <span className="text-black">(</span>
+                  <span className="text-[#23974b]">&quot;affiliate&quot;</span>
+                  <span className="text-black">
+                    );
+                    <br />
+                    const split = window.
+                  </span>
+                  <span className="text-[#0868b9]">split</span>
+                  <span className="text-black">
+                    ;<br />
+                    const res ={" "}
+                  </span>
+                  <span className="text-[#ff0000]">await</span>
+                  <span className="text-black"> split.</span>
+                  <span className="text-[#0868b9]">referral</span>
+                  <span className="text-black">(API_KEY, userWalletAddr, referralWalletCode);</span>
+                </p>
+              </div>
+            </div>
+          </>
+        );
       case 4:
         return (
           <div className="mb-10 mt-10">
@@ -119,7 +416,7 @@ export const Register = () => {
             type="button"
             color="blue"
             className="rounded-[5px] px-[30px] py-[16px] text-theme-white"
-            onClick={handleNextStep}
+            onClick={handleCreateProduct}
             description="Next"
           />
         );
@@ -130,8 +427,9 @@ export const Register = () => {
               type="button"
               color="blue"
               className="mr-2 rounded-[5px] px-[30px] py-[16px] text-theme-white"
-              onClick={handlePrevStep}
+              onClick={handlePrevStep} // deploy pool
               description="Deploy Pool"
+              disabled={!isEventAdded}
             />
             <Button
               type="button"
@@ -139,6 +437,7 @@ export const Register = () => {
               className="rounded-[5px] px-[30px] py-[16px] text-theme-white"
               onClick={handleNextStep}
               description="Next"
+              disabled // 트잭 성공시 활성화
             />
           </>
         );
