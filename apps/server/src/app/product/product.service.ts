@@ -84,6 +84,10 @@ export class ProductService {
     });
   }
 
+  async findProductById(id: string) {
+    return this.prisma.extended.product.findUnique({ where: { id } });
+  }
+
   async findProductByApiKey(apiKey: string) {
     return this.prisma.extended.product.findUnique({ where: { apiKey } });
   }
