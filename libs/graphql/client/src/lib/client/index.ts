@@ -1,5 +1,6 @@
 import type { NormalizedCacheObject } from "@apollo/client";
 import { ApolloClient, InMemoryCache, createHttpLink, from, fromPromise } from "@apollo/client";
+import { setContext } from "@apollo/client/link/context";
 import { onError } from "@apollo/client/link/error";
 import { useState } from "react";
 import type { Token } from "@split/model";
@@ -7,6 +8,14 @@ import type { CookieContext } from "@split/utils";
 import { type AuthCookieContext, authCookieKey, getCurrentToken, getNewToken, removeToken, setToken } from "./token";
 
 const REFRESH_TOKEN_OPERATION = "refreshTokens";
+
+export const AuthTokenManager = {
+  authCookieKey,
+  getCurrentToken,
+  getNewToken,
+  removeToken,
+  setToken,
+};
 
 export const getApolloClient = (uri?: string, cookieContext?: CookieContext) => {
   let client: ApolloClient<NormalizedCacheObject>;
@@ -23,6 +32,22 @@ export const getApolloClient = (uri?: string, cookieContext?: CookieContext) => 
       mode: "cors",
     },
     fetch,
+  });
+
+  const authLink = setContext((_, { headers }) => {
+    const { accessToken } = getCurrentToken(context);
+    if (!accessToken) {
+      return {
+        headers,
+      };
+    }
+
+    return {
+      headers: {
+        ...headers,
+        authorization: `Bearer ${accessToken}`,
+      },
+    };
   });
 
   const errorLink = onError(({ graphQLErrors, operation, forward }) => {
@@ -81,7 +106,7 @@ export const getApolloClient = (uri?: string, cookieContext?: CookieContext) => 
 
   client = new ApolloClient({
     ssrMode,
-    link: from([errorLink, serverLink]),
+    link: from([authLink, errorLink, serverLink]),
     cache: new InMemoryCache(),
   });
 
