@@ -8,6 +8,8 @@ export const formatAddress = (walletAddress: string | undefined) => {
 export const formatChainId = (rawChainId: number | undefined) => {
   if (!rawChainId) throw new Error();
   switch (rawChainId) {
+    case 1:
+      return SupportedChainIds.ETHEREUM_MAINNET;
     case 11155111:
       return SupportedChainIds.ETHEREUM_SEPOLIA;
     case 421614:
@@ -19,6 +21,8 @@ export const formatChainId = (rawChainId: number | undefined) => {
 
 export const formatChainIdToName = (chainId: SupportedChainIds) => {
   switch (chainId) {
+    case SupportedChainIds.ETHEREUM_MAINNET:
+      return "Ethereum Mainnet";
     case SupportedChainIds.ETHEREUM_SEPOLIA:
       return "Ethereum Sepolia";
     case SupportedChainIds.ARBITRUM_SEPOLIA:
