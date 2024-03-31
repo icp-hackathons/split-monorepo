@@ -6,7 +6,7 @@ import { useState } from "react";
 import { useCreateProduct, useSetIncentivePool } from "@split/graphql";
 import { useDeployPool } from "@split/hooks";
 import type { ProductUpdateInput } from "@split/model";
-import { Button, Dropdown, TextField } from "@split/ui";
+import { Button, Dropdown, ModalContext, TextField, useModalContext } from "@split/ui";
 import close from "../../../public/shared/icons/Group 6.svg";
 import addItem from "../../../public/shared/icons/addItem.svg";
 import copy from "../../../public/shared/icons/copy.svg";
@@ -18,6 +18,7 @@ import { Header } from "../../layouts/Common/Header/Header";
 import SubHeader from "../../layouts/Common/SubHeader/SubHeader";
 
 export const Register = () => {
+  const { modalContext } = useModalContext();
   const router = useRouter();
 
   const [step, setStep] = useState<number>(1);
@@ -501,22 +502,25 @@ export const Register = () => {
   };
 
   return (
-    <div className="flex h-full w-full flex-col">
-      <Header />
-      <SubHeader />
-      <div className={clsx("flex flex-row gap-[60px] pl-[60px] pr-[60px]")}>
-        <RegisterProducts step={step} />
-        <div className="mt-[30px] h-full w-[2px] bg-gray-200" />
-        <div className="mt-[30px] flex h-full  w-full flex-col gap-10">
-          <div className="flex flex-col gap-5">
-            <p className="text-[24px] font-semibold">{title}</p>
-            <p className="text-16/regular">{subtitle}</p>
-            <div className="flex w-full flex-col gap-5">{renderContentsField()}</div>
+    <>
+      {modalContext}
+      <div className="flex h-full w-full flex-col">
+        <Header />
+        <SubHeader />
+        <div className={clsx("flex flex-row gap-[60px] pl-[60px] pr-[60px]")}>
+          <RegisterProducts step={step} />
+          <div className="mt-[30px] h-full w-[2px] bg-gray-200" />
+          <div className="mt-[30px] flex h-full  w-full flex-col gap-10">
+            <div className="flex flex-col gap-5">
+              <p className="text-[24px] font-semibold">{title}</p>
+              <p className="text-16/regular">{subtitle}</p>
+              <div className="flex w-full flex-col gap-5">{renderContentsField()}</div>
+            </div>
+            <div className="flex justify-end">{renderButtons()}</div>
           </div>
-          <div className="flex justify-end">{renderButtons()}</div>
         </div>
       </div>
-    </div>
+    </>
   );
 };
 
