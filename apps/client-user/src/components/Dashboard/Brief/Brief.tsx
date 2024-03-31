@@ -2,7 +2,7 @@ import { Label } from "@split/ui";
 
 export interface BriefProps {
   description: string;
-  lastUpdated: Date;
+  lastUpdated: string;
   briefInfos: {
     index: string;
     value: string;

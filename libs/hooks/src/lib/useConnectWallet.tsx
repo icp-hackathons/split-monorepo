@@ -9,6 +9,11 @@ export enum InternalLoginState {
   DONE = "done",
 }
 
+export enum WalletType {
+  METAMASK = "metamask",
+  NEOPIN = "neopin",
+}
+
 export const useConnectWallet = () => {
   const { connect, connectors } = useConnect();
   const { disconnect } = useDisconnect();
@@ -38,11 +43,18 @@ export const useConnectWallet = () => {
     },
   });
 
-  const handleConnect = () => {
+  const handleConnect = (walletType: WalletType) => {
     setInternalLoginState(InternalLoginState.PROGRESS);
     try {
-      const metamaskConnector = connectors[0];
-      connect({ connector: metamaskConnector });
+      if (walletType === WalletType.NEOPIN) {
+        const neopinConnector = connectors[1];
+        connect({ connector: neopinConnector });
+      } else if (walletType === WalletType.METAMASK) {
+        const metamaskConnector = connectors[0];
+        connect({ connector: metamaskConnector });
+      } else {
+        throw Error();
+      }
     } catch (error) {
       console.log(error);
       setInternalLoginState(InternalLoginState.NOT_STARTED);

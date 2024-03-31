@@ -12,7 +12,7 @@ const { chains, publicClient, webSocketPublicClient } = configureChains(
 export const wagmiConfig = createConfig({
   autoConnect: true,
   connectors: [
-    // new MetaMaskConnector({ chains }),
+    new MetaMaskConnector({ chains }),
     new WalletConnectConnector({ chains, options: { projectId: process.env.NEXT_PUBLIC_PROJECT_ID || "" } }),
   ],
   publicClient,
