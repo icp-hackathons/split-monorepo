@@ -14,7 +14,7 @@ export const NetworkStatus = ({ chainId }: NetworkStatusProps) => {
   const chainName = formatChainIdToName(chainId);
 
   return (
-    <div className="flex w-[160px] items-center justify-between">
+    <div className="flex items-center justify-between gap-3">
       <p className={clsx("text-16/semi-bold", isSupported ? "text-theme-black" : "text-theme-error")}>
         {isSupported ? chainName : "Invalid Network"}
       </p>

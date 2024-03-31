@@ -25,8 +25,8 @@ export const Dashboard = () => {
     <div className="flex flex-col gap-10 px-[60px] py-[30px]">
       {/* Briefs */}
       <div className="flex items-center justify-between gap-8">
-        <Brief description="In This Month" lastUpdated={new Date("2024-03-31")} briefInfos={mockMonthBriefInfos} />
-        <Brief description="Entire Period" lastUpdated={new Date("2024-03-31")} briefInfos={mockTotalBriefInfos} />
+        <Brief description="In This Month" lastUpdated="2024-03-31 09:00:00" briefInfos={mockMonthBriefInfos} />
+        <Brief description="Entire Period" lastUpdated="2024-03-31 09:00:00" briefInfos={mockTotalBriefInfos} />
       </div>
       {/* Products */}
       <div className="flex flex-col gap-[15px]">

@@ -1,13 +1,14 @@
 import Image from "next/image";
 import { useAuth } from "@split/graphql";
 import { useConnectWallet } from "@split/hooks";
-import { Button, NetworkStatus } from "@split/ui";
+import { Button, NetworkStatus, useModalContext } from "@split/ui";
 import { formatAddress, formatChainId } from "@split/utils";
 import MetamaskIcon from "~/client-user/public/shared/icons/MetamaskIcon.png";
 import { ServiceTypes } from "~/client-user/src/types/user";
 import Logo from "~/ui/public/images/Logo.png";
 import { Tab } from "../Tab/Tab";
 import { TabDropdown } from "../Tab/TabDropdown/TabDropdown";
+import WalletModal from "../WalletModal/WalletModal";
 
 const tabs = [
   {
@@ -81,9 +82,12 @@ export const Header = () => {
   const { address, chain, handleConnect, handleDisconnect } = useConnectWallet();
   const chainId = chain?.id;
 
+  const { setModalContext } = useModalContext();
+
   const handleWalletConnect = () => {
     if (!address) {
-      handleConnect();
+      // handleConnect();
+      setModalContext(<WalletModal />);
     } else {
       handleDisconnect();
     }
